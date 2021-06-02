@@ -1,8 +1,9 @@
 const knex = require("./../db/connection");
 
 function list() {
-  return knex("reservations")
-    .select("*");
+  return knex("reservations as r")
+    .select("*")
+    .orderBy("r.reservation_time", "r.reservation_date");
 }
 
 function read(reservationId) {
