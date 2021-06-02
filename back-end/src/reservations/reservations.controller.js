@@ -16,15 +16,16 @@ const createReservationValidation = {
       mobile_number: Joi.string()
         .pattern(new RegExp("^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$"))
         .required(),
+      people: Joi.number()
+          .strict()
+          .min(1)
+          .max(30)
+          .required(),
       reservation_date: Joi.string()
         .pattern(new RegExp("[0-9]{4}-[0-9]{2}-[0-9]{2}"))
         .required(),
       reservation_time: Joi.string()
         .pattern(new RegExp("^(?:[01][0-9]|2[0-3])[-:h][0-5][0-9]$"))
-        .required(),
-      people: Joi.number()
-        .min(1)
-        .max(30)
         .required(),
     })
   })
