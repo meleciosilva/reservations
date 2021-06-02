@@ -1,4 +1,4 @@
-[
+module.exports = [
   {
     "first_name": "Rick",
     "last_name": "Sanchez",
