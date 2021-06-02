@@ -1,5 +1,34 @@
 const asyncErrorBoundary = require("./../errors/asyncErrorBoundary");
 const reservationsService = require("./reservations.service");
+const { validate, Joi } = require('express-validation')
+
+const createReservationValidation = {
+  body: Joi.object({
+    data: Joi.object({
+      first_name: Joi.string()
+        .min(1)
+        .max(20)
+        .required(),
+      last_name: Joi.string()
+        .min(1)
+        .max(20)
+        .required(),
+      mobile_number: Joi.string()
+        .pattern(new RegExp("^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$"))
+        .required(),
+      reservation_date: Joi.string()
+        .pattern(new RegExp("[0-9]{4}-[0-9]{2}-[0-9]{2}"))
+        .required(),
+      reservation_time: Joi.string()
+        .pattern(new RegExp("^(?:[01][0-9]|2[0-3])[-:h][0-5][0-9]$"))
+        .required(),
+      people: Joi.number()
+        .min(1)
+        .max(30)
+        .required(),
+    })
+  })
+}
 
 // valid properties for creating reservations
 const VALID_PROPERTIES = [
@@ -72,15 +101,39 @@ function read(req, res) {
 async function create(req, res) {
   const newReservation = req.body.data;
   const data = await reservationsService.create(newReservation);
+  res.status(201).json({ data });
+}
+
+async function update(req, res) {
+  const originalReservation = res.locals.reservation;
+  const newReservation = {
+    ...req.body.data,
+    reservation_id: originalReservation.reservation_id
+  }
+  const data = await reservationsService.update(newReservation);
   res.json({ data });
+}
+
+async function destroy(req, res) {
+  const reservationId = res.locals.reservation.reservation_id;
+  await reservationsService.destroy(reservationId);
+  res.sendStatus(204);
 }
 
 module.exports = {
   create: [ 
     asyncErrorBoundary(hasOnlyValidProps),
     asyncErrorBoundary(hasRequiredProps),
+    validate(createReservationValidation, { keyByField: true }, {}),
     asyncErrorBoundary(create) 
   ],
+  update: [
+    asyncErrorBoundary(reservationExists),
+    asyncErrorBoundary(hasOnlyValidProps),
+    asyncErrorBoundary(hasRequiredProps),
+    asyncErrorBoundary(update) 
+  ],
   list: asyncErrorBoundary(list),
-  read: [ asyncErrorBoundary(reservationExists), asyncErrorBoundary(read) ],
+  read: [ asyncErrorBoundary(reservationExists), read ],
+  delete: [ asyncErrorBoundary(reservationExists), asyncErrorBoundary(destroy) ],
 };
