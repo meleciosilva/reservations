@@ -2,6 +2,7 @@ const asyncErrorBoundary = require("./../errors/asyncErrorBoundary");
 const reservationsService = require("./reservations.service");
 const { validate, Joi } = require('express-validation')
 
+// validation schema for creating reservation
 const createReservationValidation = {
   body: Joi.object({
     data: Joi.object({
@@ -90,8 +91,10 @@ async function reservationExists(req, res, next) {
 // Router-level Middleware
 
 async function list(req, res) {
+  const { date } = req.query;
   const data = await reservationsService.list();
-  res.json({ data });
+  const byResult = date ? reservation => JSON.stringify(reservation.reservation_date).includes(date) : () => true;
+  res.json({ data: data.filter(byResult) });
 }
 
 function read(req, res) {
