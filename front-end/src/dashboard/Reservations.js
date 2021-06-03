@@ -4,7 +4,7 @@ function Reservations({ reservations }) {
   return (
     <div>
       { reservations.map(reservation => (
-        <div className="card" key={ reservation.reservation_id }>
+        <div className="card mb-2" key={ reservation.reservation_id }>
           <div className="card-header d-flex justify-content-between">
             <h5 className="font-weight-bold">{ reservation.first_name } { reservation.last_name }</h5>
             <h5 className="font-weight-bold">Party: { reservation.people }</h5>
