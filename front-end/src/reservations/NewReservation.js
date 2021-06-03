@@ -50,7 +50,7 @@ function NewReservation() {
         </div>
         <div className="col-6">
           <label htmlFor="mobile_number" className="form-label">Mobile Number</label>
-          <input name="mobile_number" type="tel" className="form-control" id="mobile_number" placeholder="123-456-7890" required pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" maxLength="12" value={state.mobile_number} onChange={handleChange}/>
+          <input name="mobile_number" type="tel" className="form-control" id="mobile_number" placeholder="123-4567" required pattern="[0-9]{3}-[0-9]{4}" maxLength="8" value={state.mobile_number} onChange={handleChange}/>
           <small>Format: 123-456-7890</small>
         </div>
         <div className="col-6">
@@ -67,7 +67,7 @@ function NewReservation() {
           <small>Business Hours are between 7am - 10pm</small>
         </div>
         <div className="col-12">
-          <button className="btn btn-secondary mr-2" onClick={() => history.go(-1)}>Cancel</button>
+          <button className="btn btn-secondary mr-2" onClick={() => history.goBack()}>Cancel</button>
           <button type="submit" className="btn btn-primary">Submit</button>
         </div>
       </form>
