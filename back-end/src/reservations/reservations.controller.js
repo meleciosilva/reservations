@@ -1,6 +1,6 @@
 const asyncErrorBoundary = require("./../errors/asyncErrorBoundary");
 const reservationsService = require("./reservations.service");
-const { validate, Joi } = require('express-validation')
+const { validate, Joi } = require('express-validation');
 
 // validation schema for creating reservation
 const createReservationValidation = {
@@ -15,14 +15,19 @@ const createReservationValidation = {
         .max(20)
         .required(),
       mobile_number: Joi.string()
-        .pattern(new RegExp("[0-9]{3}-[0-9]{4}"))
+        .pattern(new RegExp("^[0-9]{3}-[0-9]{3}-[0-9]{4}$"))
         .required(),
       people: Joi.number()
         .strict()
         .min(1)
         .required(),
       reservation_date: Joi.string()
-        .pattern(new RegExp("[0-9]{4}-[0-9]{2}-[0-9]{2}"))
+        .pattern(new RegExp("^[0-9]{4}-[0-9]{2}-[0-9]{2}$"))
+        .custom((value, helpers) => {
+          const day = new Date(value).getUTCDay();
+          if (day == "2") return helpers.message("Sorry, we are closed on Tuesdays");
+          if (new Date(value) < new Date()) return helpers.message("You cannot make a reservation in the past. Select a future date.");
+        })
         .required(),
       reservation_time: Joi.string()
         .pattern(new RegExp("^(?:[01][0-9]|2[0-3])[-:h][0-5][0-9]$"))
