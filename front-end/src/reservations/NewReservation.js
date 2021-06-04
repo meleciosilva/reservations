@@ -1,11 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { today } from "../utils/date-time";
 import { createReservation } from "../utils/api";
+import ErrorAlert from "./ErrorAlert";
+
 
 function NewReservation() {
   const history = useHistory();
 
+  const [newReservationsErrors, setNewReservationsErrors] = useState(null);
+  const [isSubmit, setIsSubmit] = useState(null);
   const [state, setState] = useState({
     first_name: "",
     last_name: "",
@@ -14,6 +18,28 @@ function NewReservation() {
     reservation_date: "",
     reservation_time: "",
   });
+
+  useEffect(handleErrors, [state.reservation_date]);
+  
+  function handleErrors() {
+    setIsSubmit(null);
+    const errors =[];
+    const day = new Date(state.reservation_date).getUTCDay();
+    
+    if (day === 2 ) {
+      errors.push("Sorry, we are closed on Tuesdays")
+    }
+    if (state.reservation_date < today() && state.reservation_date !== "") {
+      errors.push("You cannot make a reservation in the past. Select a future date.");
+    }
+    
+    if (errors.length >= 1) {
+      setNewReservationsErrors(errors);
+    } else {
+      setNewReservationsErrors(null);
+    }
+
+  }
 
   function handleChange(e) {
     let value = e.target.value;
@@ -28,16 +54,21 @@ function NewReservation() {
     });
   }
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    createReservation(state);
-    history.push(`/dashboard?date=${state.reservation_date}`);
+    setIsSubmit(true);
+    if (!newReservationsErrors) {
+      createReservation(state);
+      history.push(`/dashboard?date=${state.reservation_date}`);
+    }
   }
   
   return (
     <div>
       <h1>New Reservation</h1>
       <hr />
+
+      <ErrorAlert errors={newReservationsErrors} isSubmit={isSubmit} />
 
       <form className="row g-3" onSubmit={handleSubmit}>
         <div className="col-md-6">
@@ -50,7 +81,7 @@ function NewReservation() {
         </div>
         <div className="col-6">
           <label htmlFor="mobile_number" className="form-label">Mobile Number</label>
-          <input name="mobile_number" type="tel" className="form-control" id="mobile_number" placeholder="123-4567" required pattern="[0-9]{3}-[0-9]{4}" maxLength="8" value={state.mobile_number} onChange={handleChange}/>
+          <input name="mobile_number" type="tel" className="form-control" id="mobile_number" placeholder="123-456-7890" required pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" maxLength="12" value={state.mobile_number} onChange={handleChange}/>
           <small>Format: 123-456-7890</small>
         </div>
         <div className="col-6">
@@ -59,18 +90,19 @@ function NewReservation() {
         </div>
         <div className="col-6">
           <label htmlFor="reservation_date" className="form-label">Date</label>
-          <input name="reservation_date" type="date" className="form-control" id="reservation_date" min={today()} required value={state.reservation_date} onChange={handleChange}/>
+          <input name="reservation_date" type="date" className="form-control" id="reservation_date" placeholder="YYYY-MM-DD" required value={state.reservation_date} onChange={handleChange}/>
         </div>
         <div className="col-md-6">
           <label htmlFor="reservation_time" className="form-label">Time</label>
-          <input name="reservation_time" type="time" className="form-control" id="reservation_time" required min="07:00" max="22:00" step="900" value={state.reservation_time} onChange={handleChange}/>
+          <input name="reservation_time" type="time" className="form-control" id="reservation_time" placeholder="HH:MM" required min="07:00" max="22:00" step="900" value={state.reservation_time} onChange={handleChange}/>
           <small>Business Hours are between 7am - 10pm</small>
         </div>
         <div className="col-12">
-          <button className="btn btn-secondary mr-2" onClick={() => history.goBack()}>Cancel</button>
+          <button className="btn btn-secondary mr-2" onClick={ () => history.goBack() }>Cancel</button>
           <button type="submit" className="btn btn-primary">Submit</button>
         </div>
       </form>
+      
     </div>
   )
 }
