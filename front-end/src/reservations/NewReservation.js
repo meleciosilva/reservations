@@ -19,18 +19,25 @@ function NewReservation() {
     reservation_time: "",
   });
 
-  useEffect(handleErrors, [state.reservation_date]);
+  useEffect(handleErrors, [state.reservation_date, state.reservation_time]);
   
   function handleErrors() {
     setIsSubmit(null);
     const errors =[];
     const day = new Date(state.reservation_date).getUTCDay();
+    const time = state.reservation_time;
+    const date = state.reservation_date;
+    const currentTime = Date.now();
     
     if (day === 2 ) {
       errors.push("Sorry, we are closed on Tuesdays")
     }
-    if (state.reservation_date < today() && state.reservation_date !== "") {
+    if ( date && (currentTime > Date.parse(`${date} ${time}`)) ) {
       errors.push("You cannot make a reservation in the past. Select a future date.");
+    }
+
+    if (time < "10:30" || time > "21:30") {
+      errors.push("Please make a reservation between 10:30am - 9:30pm");
     }
     
     if (errors.length >= 1) {
@@ -94,8 +101,8 @@ function NewReservation() {
         </div>
         <div className="col-md-6">
           <label htmlFor="reservation_time" className="form-label">Time</label>
-          <input name="reservation_time" type="time" className="form-control" id="reservation_time" placeholder="HH:MM" required min="07:00" max="22:00" step="900" value={state.reservation_time} onChange={handleChange}/>
-          <small>Business Hours are between 7am - 10pm</small>
+          <input name="reservation_time" type="time" className="form-control" id="reservation_time" placeholder="HH:MM" value={state.reservation_time} onChange={handleChange}/>
+          <small>Hours 10:30am - 10:30pm | <strong>Last reservation at 9:30pm</strong></small>
         </div>
         <div className="col-12">
           <button className="btn btn-secondary mr-2" onClick={ () => history.goBack() }>Cancel</button>
