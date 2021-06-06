@@ -110,9 +110,15 @@ async function seatReservation(reservation_id, table_id) {
   return await fetchJson(url, options, {});
 }
 
+async function fetchTables(signal) {
+  const url = new URL(`${API_BASE_URL}/tables`);
+  return await fetchJson(url, { headers, signal }, []);
+}
+
 export {
   listReservations,
   createReservation,
   createTable,
-  seatReservation
+  seatReservation,
+  fetchTables,
 };
