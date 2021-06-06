@@ -15,22 +15,17 @@ const createReservationValidation = {
         .max(20)
         .required(),
       mobile_number: Joi.string()
-        .pattern(new RegExp("^[0-9]{3}-[0-9]{3}-[0-9]{4}$"))
+        .pattern(new RegExp("^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$")).message("'mobile_number' should have a minimum of 10 digits'")
         .required(),
       people: Joi.number()
         .strict()
         .min(1)
         .required(),
       reservation_date: Joi.string()
-        .pattern(new RegExp("^[0-9]{4}-[0-9]{2}-[0-9]{2}$"))
-        .custom((value, helpers) => {
-          const day = new Date(value).getUTCDay();
-          if (day == "2") return helpers.message("Sorry, we are closed on Tuesdays");
-          if (new Date(value) < new Date()) return helpers.message("You cannot make a reservation in the past. Select a future date.");
-        })
+        .pattern(new RegExp("^[0-9]{4}-[0-9]{2}-[0-9]{2}$")).message("'reservation_date' should be formatted: 'YYYY-MM-DD'")
         .required(),
       reservation_time: Joi.string()
-        .pattern(new RegExp("^(?:[01][0-9]|2[0-3])[-:h][0-5][0-9]$"))
+        .pattern(new RegExp("^(?:[01][0-9]|2[0-3])[-:h][0-5][0-9]$")).message("'reservation_time' should be formatted as follows: 'HH:MM'")
         .required(),
     })
   })
@@ -47,6 +42,36 @@ const VALID_PROPERTIES = [
 ];
 
 // Validation Middleware
+
+function scheduledForFuture(req, res, next) {
+  const { reservation_date, reservation_time } = req.body.data;
+  
+  const day = new Date(reservation_date).getUTCDay();
+  const time = reservation_time;
+  const date = reservation_date;
+  const currentTime = Date.now();
+  
+  if ( currentTime > Date.parse(`${date} ${time}`) ) {
+    return next({
+      status: 400,
+      message: "You cannot make a reservation in the past. Select a future date and/or time."
+    });
+  }
+  if (day === 2 ) {
+    return next({
+      status: 400,
+      message: "Sorry, we are closed on Tuesdays"
+    });
+  }
+  if (time < "10:30" || time > "21:30") {
+    return next({
+      status: 400,
+      message: "Please make a reservation between 10:30am - 9:30pm"
+    });
+  }
+
+  next();
+}
 
 function hasOnlyValidProps(req, res, next) {
   const { data = {} } = req.body;
@@ -133,13 +158,16 @@ module.exports = {
     asyncErrorBoundary(hasOnlyValidProps),
     asyncErrorBoundary(hasRequiredProps),
     validate(createReservationValidation, { keyByField: true }, {}),
+    asyncErrorBoundary(scheduledForFuture),
     asyncErrorBoundary(create) 
   ],
   update: [
     asyncErrorBoundary(reservationExists),
     asyncErrorBoundary(hasOnlyValidProps),
     asyncErrorBoundary(hasRequiredProps),
-    asyncErrorBoundary(update) 
+    validate(createReservationValidation, { keyByField: true }, {}),
+    asyncErrorBoundary(scheduledForFuture),
+    asyncErrorBoundary(update)
   ],
   list: asyncErrorBoundary(list),
   read: [ asyncErrorBoundary(reservationExists), read ],
