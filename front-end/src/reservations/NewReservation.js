@@ -87,7 +87,7 @@ function NewReservation() {
         </div>
         <div className="col-6">
           <label htmlFor="mobile_number" className="form-label">Mobile Number</label>
-          <input name="mobile_number" type="tel" className="form-control" id="mobile_number" placeholder="123-456-7890" required pattern="^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$" title="mobile number must have at least 10 digits" value={state.mobile_number} onChange={handleChange}/>
+          <input name="mobile_number" type="tel" className="form-control" id="mobile_number" placeholder="123-456-7890" required pattern="^[\+]?[(]?[0-9]{0,3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$" title="mobile number must have at least 7 digits" value={state.mobile_number} onChange={handleChange}/>
           <small>Format: 123-456-7890</small>
         </div>
         <div className="col-6">

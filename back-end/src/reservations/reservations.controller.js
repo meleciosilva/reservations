@@ -15,7 +15,7 @@ const createReservationValidation = {
         .max(20)
         .required(),
       mobile_number: Joi.string()
-        .pattern(new RegExp("^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$")).message("'mobile_number' should have a minimum of 10 digits'")
+        .pattern(new RegExp("^[\+]?[(]?[0-9]{0,3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$")).message("'mobile_number' should have a minimum of 7 digits'")
         .required(),
       people: Joi.number()
         .strict()
