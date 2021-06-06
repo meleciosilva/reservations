@@ -85,25 +85,25 @@ function NewReservation() {
           <label htmlFor="last_name" className="form-label">Last Name</label>
           <input name="last_name" type="text" className="form-control" id="last_name" placeholder="Doe" required minLength="2" maxLength="20" value={state.last_name} onChange={handleChange}/>
         </div>
-        <div className="col-6">
+        <div className="col-md-6">
           <label htmlFor="mobile_number" className="form-label">Mobile Number</label>
           <input name="mobile_number" type="tel" className="form-control" id="mobile_number" placeholder="123-456-7890" required pattern="^[\+]?[(]?[0-9]{0,3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$" title="mobile number must have at least 7 digits" value={state.mobile_number} onChange={handleChange}/>
-          <small>Format: 123-456-7890</small>
         </div>
-        <div className="col-6">
+        <div className="col-md-6">
           <label htmlFor="people" className="form-label">Party Size</label>
           <input name="people" type="number" className="form-control" id="people" placeholder="5" required min="1" value={state.people} onChange={handleChange}/>
         </div>
-        <div className="col-6">
+        <div className="col-md-6">
           <label htmlFor="reservation_date" className="form-label">Date</label>
-          <input name="reservation_date" type="date" className="form-control" id="reservation_date" placeholder="YYYY-MM-DD" required value={state.reservation_date} onChange={handleChange}/>
+          <input name="reservation_date" type="date" className="form-control" id="reservation_date" placeholder="YYYY-MM-DD" aria-describedby="reservation_date_help" required value={state.reservation_date} onChange={handleChange}/>
+          <div id="reservation_date_help" className="form-text">Closed on Tuesday</div>
         </div>
         <div className="col-md-6">
           <label htmlFor="reservation_time" className="form-label">Time</label>
-          <input name="reservation_time" type="time" className="form-control" id="reservation_time" placeholder="HH:MM" value={state.reservation_time} onChange={handleChange}/>
-          <small>Hours 10:30am - 10:30pm | <strong>Last reservation at 9:30pm</strong></small>
+          <input name="reservation_time" type="time" className="form-control" id="reservation_time" placeholder="HH:MM" aria-describedby="reservation_time_help" value={state.reservation_time} onChange={handleChange}/>
+          <div id="reservation_time_help" className="form-text">Hours 10:30am - 10:30pm | <strong>Last reservation at 9:30pm</strong></div>
         </div>
-        <div className="col-12">
+        <div className="col-md-12">
           <button className="btn btn-secondary mr-2" onClick={ () => history.goBack() }>Cancel</button>
           <button type="submit" className="btn btn-primary">Submit</button>
         </div>
