@@ -6,6 +6,7 @@ import useQuery from "./../utils/useQuery";
 import ErrorAlert from "../layout/ErrorAlert";
 import ButtonGroup from "./ButtonGroup";
 import Reservations from "./Reservations";
+import Tables from "./Tables";
 
 /**
  * Defines the dashboard page.
@@ -45,6 +46,7 @@ function Dashboard() {
       </div>
       <ButtonGroup date={date} handleDate={handleDate}/>
       <ErrorAlert error={reservationsError} />
+      <Tables />
       <Reservations reservations={reservations} />
     </main>
   );
