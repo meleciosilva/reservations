@@ -155,18 +155,18 @@ async function destroy(req, res) {
 
 module.exports = {
   create: [ 
-    asyncErrorBoundary(hasOnlyValidProps),
-    asyncErrorBoundary(hasRequiredProps),
+    hasOnlyValidProps,
+    hasRequiredProps,
     validate(createReservationValidation, { keyByField: true }, {}),
-    asyncErrorBoundary(scheduledForFuture),
+    scheduledForFuture,
     asyncErrorBoundary(create) 
   ],
   update: [
     asyncErrorBoundary(reservationExists),
-    asyncErrorBoundary(hasOnlyValidProps),
-    asyncErrorBoundary(hasRequiredProps),
+    hasOnlyValidProps,
+    hasRequiredProps,
     validate(createReservationValidation, { keyByField: true }, {}),
-    asyncErrorBoundary(scheduledForFuture),
+    scheduledForFuture,
     asyncErrorBoundary(update)
   ],
   list: asyncErrorBoundary(list),
