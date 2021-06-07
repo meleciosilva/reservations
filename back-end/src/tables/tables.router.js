@@ -8,6 +8,11 @@ router
   .all(methodNotAllowed);
 
 router
+  .route("/:tableId")
+  .get(controller.read)
+  .all(methodNotAllowed);
+
+router
   .route("/")
   .get(controller.list)
   .post(controller.create)
