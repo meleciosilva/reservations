@@ -21,10 +21,5 @@ exports.seed = function(knex) {
       capacity: 6,
       reservation_id: null
     },
-    {
-      table_name: "#3",
-      capacity: 4,
-      reservation_id: null
-    },
   ]);
 };
