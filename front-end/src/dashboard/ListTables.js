@@ -1,4 +1,4 @@
-function ListTables( {tables} ) {
+function ListTables( {tables, handleFinish} ) {
   
   if (!tables) return null;
   const sortedTables = tables.sort((a, b) => a.table_name.localeCompare(b.table_name));
@@ -12,7 +12,10 @@ function ListTables( {tables} ) {
             <div className="card mb-2">
               <div className="card-body">
                 <h5 className="card-title">{ table.table_name }</h5>
-                <p className="card-text" data-table-id-status={table.table_id} >{ !table.reservation_id ? "Free" : "Occupied" }</p>
+                <p className="card-text font-weight-bold" data-table-id-status={table.table_id} >{ !table.reservation_id ? "Free" : "Occupied" }</p>
+                { table.reservation_id && 
+                  <button type="button" className="btn btn-danger" data-table-id-finish={table.table_id} onClick={() => handleFinish(table.table_id)}>Finish</button> 
+                }
               </div>
             </div>
           </div>
