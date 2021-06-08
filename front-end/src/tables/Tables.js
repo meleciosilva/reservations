@@ -1,14 +1,14 @@
 import { Redirect, Route, Switch } from "react-router-dom";
 import NewTable from "./NewTable";
 
-function Tables() {
+function Tables({ handleNewTable }) {
   return (
     <Switch>
       <Route exact={true} path="/tables">
-        <Redirect to={"/dashboard"} />
+        <Redirect to="/dashboard" />
       </Route>
       <Route path="/tables/new">
-        <NewTable />
+        <NewTable handleNewTable={handleNewTable} />
       </Route>
     </Switch>
   )
