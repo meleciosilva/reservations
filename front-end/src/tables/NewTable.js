@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { createTable } from "../utils/api";
 
-function NewTable() {
+function NewTable({ handleNewTable }) {
   const history = useHistory();
   const [state, setState] = useState({
     table_name: "",
@@ -25,8 +25,8 @@ function NewTable() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(state)
     createTable(state);
+    handleNewTable(state);
     history.push("/dashboard");
   }
 
