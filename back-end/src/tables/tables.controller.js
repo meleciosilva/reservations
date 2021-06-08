@@ -2,7 +2,8 @@ const tablesService = require("./tables.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const { validate, Joi } = require('express-validation');
 
-// validation schema for creating reservation
+// validation schemas
+
 const createTableValidation = {
   body: Joi.object({
     data: Joi.object({
@@ -14,6 +15,8 @@ const createTableValidation = {
         .strict()
         .min(1)
         .required(),
+      reservation_id: Joi.number()
+        .min(1),
     })
   })
 }
@@ -39,6 +42,17 @@ async function tableExists(req, res, next) {
     });
   }
   res.locals.table = table;
+  next();
+}
+
+function isTableOccupied(req, res, next) {
+  const table = res.locals.table;
+  if (!table.reservation_id) {
+    return next({
+      status: 400,
+      message: `'${table.table_name}' is not occupied`
+    });
+  }
   next();
 }
 
@@ -103,6 +117,15 @@ async function update(req, res) {
   res.json({ data });
 }
 
+function destroy(req, res, next) {
+  res.locals.table.reservation_id = null; // removes reservation_id from table
+  tablesService
+    .destroy(res.locals.table.table_id)
+    .then(() => tablesService.create(res.locals.table))
+    .then(() => res.json({ data: { message: "Successfully Deleted" } }))
+    .catch(next);
+}
+
 module.exports = {
   list: asyncErrorBoundary(list),
   read: [
@@ -120,4 +143,9 @@ module.exports = {
     reservationCanBeSeated,
     asyncErrorBoundary(update),
   ],
+  delete: [
+    asyncErrorBoundary(tableExists),
+    isTableOccupied,
+    destroy,
+  ]
 }

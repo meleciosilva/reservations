@@ -54,7 +54,6 @@ function NewReservation() {
   const handleSubmit = (e) => {
     e.preventDefault();
     createReservation(state)
-      .then((newReservation) => console.log(newReservation))
       .then(() => history.push(`/dashboard?date=${state.reservation_date}`))
       .catch(handleErrors);
   }

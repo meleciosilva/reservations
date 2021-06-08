@@ -27,6 +27,12 @@ function update(updatedTable) {
     .update(updatedTable, "*");
 }
 
+function destroy(tableId) {
+  return knex("tables as t")
+    .where({ "t.table_id": tableId })
+    .del();
+}
+
 function readReservation(reservationId) {
   return knex("reservations as r")
     .select("*")
@@ -39,5 +45,6 @@ module.exports = {
   create,
   read,
   update,
+  destroy,
   readReservation
 }

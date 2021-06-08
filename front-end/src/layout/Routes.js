@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 
-import { listReservations, fetchTables } from "../utils/api";
+import { listReservations, fetchTables, deleteTable } from "../utils/api";
 import { today } from "../utils/date-time";
 import useQuery from "./../utils/useQuery";
 
@@ -13,6 +14,7 @@ import NotFound from "./NotFound";
 function Routes() {
   
   const query = useQuery();
+  const history = useHistory();
 
   const [reservations, setReservations] = useState([]);
   const [errors, setErrors] = useState(null);
@@ -49,13 +51,28 @@ function Routes() {
     });
   }
 
+  function handleFinish(tableId) {
+    const confirmed = window.confirm("Is this table ready to seat new guests? This cannot be undone.");
+    if (confirmed) {
+      deleteTable(tableId)
+        .then(() => setTables(prevState => {
+          const table = tables.find(table => Number(table.table_id) === Number(tableId));
+          table.reservation_id = null;
+          return tables;
+        }))
+        .then(() => history.push(`/dashboard?date=${date}`))
+        .then(() => fetchTables())
+        .catch(setErrors)
+    }
+  }
+
   return (
     <Switch>
       <Route exact={true} path="/">
         <Redirect to={"/dashboard"} />
       </Route>
       <Route path="/dashboard">
-        <Dashboard date={date} handleDate={handleDate} errors={errors} reservations={reservations} tables={tables} />
+        <Dashboard date={date} handleDate={handleDate} errors={errors} reservations={reservations} tables={tables} handleFinish={handleFinish} />
       </Route>
       <Route path="/reservations">
         <Reservations reservations={reservations} tables={tables} handleUpdateTable={handleUpdateTable} />
