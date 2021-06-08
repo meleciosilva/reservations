@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { createReservation } from "../utils/api";
 import ErrorAlert from "./ErrorAlert";
@@ -7,8 +7,7 @@ import ErrorAlert from "./ErrorAlert";
 function NewReservation() {
   const history = useHistory();
 
-  const [newReservationsErrors, setNewReservationsErrors] = useState(null);
-  const [isSubmit, setIsSubmit] = useState(null);
+  const [errors, setErrors] = useState(null);
   const [state, setState] = useState({
     first_name: "",
     last_name: "",
@@ -18,36 +17,28 @@ function NewReservation() {
     reservation_time: "",
   });
 
-  useEffect(handleErrors, [state.reservation_date, state.reservation_time]);
-  
   function handleErrors() {
-    setIsSubmit(null); // removes error messages
-    const errors =[];
+    const errors = [];
     const day = new Date(state.reservation_date).getUTCDay();
     const time = state.reservation_time;
     const date = state.reservation_date;
     const currentTime = Date.now();
     
     if (day === 2 ) {
-      errors.push("Sorry, we are closed on Tuesdays")
+      errors.push({ message: "Sorry, we are closed on Tuesdays" });
     }
     if ( date && (currentTime > Date.parse(`${date} ${time}`)) ) {
-      errors.push("You cannot make a reservation in the past. Select a future date.");
+      errors.push({ message: "You cannot make a reservation in the past. Select a future date." });
     }
-
     if (time < "10:30" || time > "21:30") {
-      errors.push("Please make a reservation between 10:30am - 9:30pm");
+      errors.push({ message: "Please make a reservation between 10:30am - 9:30pm" });
     }
     
-    if (errors.length >= 1) {
-      setNewReservationsErrors(errors);
-    } else {
-      setNewReservationsErrors(null);
-    }
-
+    errors.length >= 1 ? setErrors(errors) : setErrors(null);
   }
 
   function handleChange(e) {
+    setErrors(null);
     let value = e.target.value;
     
     if (e.target.name === "people") {
@@ -62,19 +53,17 @@ function NewReservation() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setIsSubmit(true);
-    if (!newReservationsErrors) {
-      createReservation(state);
-      history.push(`/dashboard?date=${state.reservation_date}`);
-    }
+    createReservation(state)
+      .then((newReservation) => console.log(newReservation))
+      .then(() => history.push(`/dashboard?date=${state.reservation_date}`))
+      .catch(handleErrors);
   }
   
   return (
     <div>
       <h1>New Reservation</h1>
       <hr />
-
-      <ErrorAlert errors={newReservationsErrors} isSubmit={isSubmit} />
+      <ErrorAlert errors={errors} />
 
       <form className="row g-3" onSubmit={handleSubmit}>
         <div className="col-md-6">
