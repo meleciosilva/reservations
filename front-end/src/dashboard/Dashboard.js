@@ -19,7 +19,7 @@ function Dashboard(props) {
       </div>
       <ButtonGroup date={props.date} handleDate={props.handleDate}/>
       <ErrorAlert error={props.errors} />
-      <ListTables tables={props.tables}/>
+      <ListTables tables={props.tables} handleFinish={props.handleFinish}/>
       <ListReservations reservations={props.reservations} />
     </main>
   );
