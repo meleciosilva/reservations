@@ -1,39 +1,41 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import { fetchTables, seatReservation } from "../utils/api";
+import { seatReservation } from "../utils/api";
+import ErrorAlert from "./ErrorAlert";
 
-function Seat() {
-  const { reservation_id } = useParams();
+function Seat({ tables, handleUpdateTable }) {
+  const [tableId, setTableId] = useState("");
+  const [errors, setErrors] = useState(null);
+  
   const history = useHistory();
-  const [tables, setTables] = useState(null);
+  const { reservation_id } = useParams();
 
-  useEffect(loadTables, []);
-
-  function loadTables() {
-    const abortController = new AbortController();
-    fetchTables(abortController.signal)
-      .then(setTables)
-      .catch(console.log);
-    return () => abortController.abort();
+  function handleChange(e) {
+    const selectedIndex = e.target.options.selectedIndex;
+    const value = e.target.options[selectedIndex].getAttribute('id');
+    setTableId(value);
   }
 
   function handleSubmit(e) {
     e.preventDefault();
-    console.log("HEY")
-    seatReservation(reservation_id);
-    history.push("/dashboard");
+    seatReservation(reservation_id, tableId)
+      .then((updatedTables) => updatedTables[0])
+      .then((handleUpdateTable))
+      .then(() => history.push("/dashboard"))
+      .catch(err => setErrors(err))
   }
   
   return (
     <div className="row">
       <h1>Select A Table</h1>
       <hr />
+      <ErrorAlert errors={errors} />
 
       <form onSubmit={handleSubmit}>
         <div className="col-md-12 mb-2">
-          <select name="table_id" className="form-select" aria-label="Default select example">
-            <option defaultValue>Open to Select a Table Number</option>
-            { tables && tables.map(table => <option key={table.table_id}>{table.table_name} - {table.capacity}</option>) }
+          <select name="table_id" className="form-select" aria-label="Default select example" value={tableId} onChange={handleChange}>
+            <option>Open to Select a Table Number</option>
+            { tables && tables.map(table => <option key={table.table_id} id={table.table_id}>{table.table_name} - {table.capacity}</option>) }
           </select>
         </div>
         <div className="col-md-12">
