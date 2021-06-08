@@ -31,19 +31,9 @@ const createReservationValidation = {
   })
 }
 
-// valid properties for creating reservations
-const VALID_PROPERTIES = [
-  "first_name",
-  "last_name",
-  "mobile_number",
-  "reservation_date",
-  "reservation_time",
-  "people"
-];
-
 // Validation Middleware
 
-function scheduledForFuture(req, res, next) {
+function scheduleWhileOpen(req, res, next) {
   const { reservation_date, reservation_time } = req.body.data;
   
   const day = new Date(reservation_date).getUTCDay();
@@ -73,36 +63,6 @@ function scheduledForFuture(req, res, next) {
   next();
 }
 
-function hasOnlyValidProps(req, res, next) {
-  const { data = {} } = req.body;
-
-  const invalidFields = Object.keys(data).filter(
-    (field) => !VALID_PROPERTIES.includes(field)
-  );
-
-  if (invalidFields.length) {
-    return next({
-      status: 400,
-      message: `Invalid field(s): ${invalidFields.join(", ")}`,
-    });
-  }
-  next();
-}
-
-function hasRequiredProps(req, res, next) {
-  const { data = {} } = req.body;
-
-  VALID_PROPERTIES.forEach((property) => {
-    if (!data[property]) {
-      return next({ 
-        status: 400,
-        message: `A '${property}' property is required.`
-       });
-    }
-  });
-  next();
-}
-
 async function reservationExists(req, res, next) {
   const { reservationId } = req.params;
   const reservation = await reservationsService.read(reservationId);
@@ -115,7 +75,6 @@ async function reservationExists(req, res, next) {
   res.locals.reservation = reservation;
   next();
 }
-
 
 // Router-level Middleware
 
@@ -154,22 +113,24 @@ async function destroy(req, res) {
 }
 
 module.exports = {
+  list: asyncErrorBoundary(list),
+  read: [
+    asyncErrorBoundary(reservationExists),
+    read,
+  ],
   create: [ 
-    asyncErrorBoundary(hasOnlyValidProps),
-    asyncErrorBoundary(hasRequiredProps),
     validate(createReservationValidation, { keyByField: true }, {}),
-    asyncErrorBoundary(scheduledForFuture),
-    asyncErrorBoundary(create) 
+    scheduleWhileOpen,
+    asyncErrorBoundary(create),
   ],
   update: [
-    asyncErrorBoundary(reservationExists),
-    asyncErrorBoundary(hasOnlyValidProps),
-    asyncErrorBoundary(hasRequiredProps),
     validate(createReservationValidation, { keyByField: true }, {}),
-    asyncErrorBoundary(scheduledForFuture),
-    asyncErrorBoundary(update)
+    asyncErrorBoundary(reservationExists),
+    scheduleWhileOpen,
+    asyncErrorBoundary(update),
   ],
-  list: asyncErrorBoundary(list),
-  read: [ asyncErrorBoundary(reservationExists), read ],
-  delete: [ asyncErrorBoundary(reservationExists), asyncErrorBoundary(destroy) ],
+  delete: [
+    asyncErrorBoundary(reservationExists),
+    asyncErrorBoundary(destroy),
+  ],
 };

@@ -1,29 +1,67 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+
+import { listReservations, fetchTables } from "../utils/api";
+import { today } from "../utils/date-time";
+import useQuery from "./../utils/useQuery";
 
 import { Redirect, Route, Switch } from "react-router-dom";
 import Dashboard from "../dashboard/Dashboard";
 import Reservations from "../reservations/Reservations";
+import Tables from "../tables/Tables";
 import NotFound from "./NotFound";
 
-/**
- * Defines all the routes for the application.
- *
- * You will need to make changes to this file.
- *
- * @returns {JSX.Element}
- */
 function Routes() {
   
+  const query = useQuery();
+
+  const [reservations, setReservations] = useState([]);
+  const [errors, setErrors] = useState(null);
+  const [tables, setTables] = useState(null);
+  // sets date to date found in query or today's date by default
+  const [date, setDate] = useState(query.get("date") || today());
+
+  useEffect(fetchAll, [date]);
+
+  function fetchAll() {
+    const abortController = new AbortController();
+    setErrors(null);
+    listReservations({ date }, abortController.signal)
+      .then(setReservations)
+      .then(() => fetchTables(abortController.signal))
+      .then(setTables)
+      .catch(setErrors);
+    return () => abortController.abort();
+  }
+
+  function handleDate(newDate) {
+    setDate(newDate);
+  }
+
+  function handleNewTable(newTable) {
+    setTables(prevState => [...prevState, newTable]);
+  }
+
+  function handleUpdateTable(updatedTable) {
+    const index = tables.findIndex(table => Number(table.table_id) === Number(updatedTable.table_id));
+    setTables(prevState => {
+      prevState.splice(index, 1, updatedTable);
+      return tables;
+    });
+  }
+
   return (
     <Switch>
       <Route exact={true} path="/">
         <Redirect to={"/dashboard"} />
       </Route>
       <Route path="/dashboard">
-        <Dashboard />
+        <Dashboard date={date} handleDate={handleDate} errors={errors} reservations={reservations} tables={tables} />
       </Route>
       <Route path="/reservations">
-        <Reservations />
+        <Reservations reservations={reservations} tables={tables} handleUpdateTable={handleUpdateTable} />
+      </Route>
+      <Route path="/tables">
+        <Tables reservations={reservations} tables={tables} handleNewTable={handleNewTable} />
       </Route>
       <Route>
         <NotFound />

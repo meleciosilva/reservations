@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { createReservation } from "../utils/api";
 import ErrorAlert from "./ErrorAlert";
@@ -7,8 +7,7 @@ import ErrorAlert from "./ErrorAlert";
 function NewReservation() {
   const history = useHistory();
 
-  const [newReservationsErrors, setNewReservationsErrors] = useState(null);
-  const [isSubmit, setIsSubmit] = useState(null);
+  const [errors, setErrors] = useState(null);
   const [state, setState] = useState({
     first_name: "",
     last_name: "",
@@ -18,36 +17,28 @@ function NewReservation() {
     reservation_time: "",
   });
 
-  useEffect(handleErrors, [state.reservation_date, state.reservation_time]);
-  
   function handleErrors() {
-    setIsSubmit(null); // removes error messages
-    const errors =[];
+    const errors = [];
     const day = new Date(state.reservation_date).getUTCDay();
     const time = state.reservation_time;
     const date = state.reservation_date;
     const currentTime = Date.now();
     
     if (day === 2 ) {
-      errors.push("Sorry, we are closed on Tuesdays")
+      errors.push({ message: "Sorry, we are closed on Tuesdays" });
     }
     if ( date && (currentTime > Date.parse(`${date} ${time}`)) ) {
-      errors.push("You cannot make a reservation in the past. Select a future date.");
+      errors.push({ message: "You cannot make a reservation in the past. Select a future date." });
     }
-
     if (time < "10:30" || time > "21:30") {
-      errors.push("Please make a reservation between 10:30am - 9:30pm");
+      errors.push({ message: "Please make a reservation between 10:30am - 9:30pm" });
     }
     
-    if (errors.length >= 1) {
-      setNewReservationsErrors(errors);
-    } else {
-      setNewReservationsErrors(null);
-    }
-
+    errors.length >= 1 ? setErrors(errors) : setErrors(null);
   }
 
   function handleChange(e) {
+    setErrors(null);
     let value = e.target.value;
     
     if (e.target.name === "people") {
@@ -62,19 +53,17 @@ function NewReservation() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setIsSubmit(true);
-    if (!newReservationsErrors) {
-      createReservation(state);
-      history.push(`/dashboard?date=${state.reservation_date}`);
-    }
+    createReservation(state)
+      .then((newReservation) => console.log(newReservation))
+      .then(() => history.push(`/dashboard?date=${state.reservation_date}`))
+      .catch(handleErrors);
   }
   
   return (
     <div>
       <h1>New Reservation</h1>
       <hr />
-
-      <ErrorAlert errors={newReservationsErrors} isSubmit={isSubmit} />
+      <ErrorAlert errors={errors} />
 
       <form className="row g-3" onSubmit={handleSubmit}>
         <div className="col-md-6">
@@ -85,26 +74,26 @@ function NewReservation() {
           <label htmlFor="last_name" className="form-label">Last Name</label>
           <input name="last_name" type="text" className="form-control" id="last_name" placeholder="Doe" required minLength="2" maxLength="20" value={state.last_name} onChange={handleChange}/>
         </div>
-        <div className="col-6">
+        <div className="col-md-6">
           <label htmlFor="mobile_number" className="form-label">Mobile Number</label>
           <input name="mobile_number" type="tel" className="form-control" id="mobile_number" placeholder="123-456-7890" required pattern="^[\+]?[(]?[0-9]{0,3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$" title="mobile number must have at least 7 digits" value={state.mobile_number} onChange={handleChange}/>
-          <small>Format: 123-456-7890</small>
         </div>
-        <div className="col-6">
+        <div className="col-md-6">
           <label htmlFor="people" className="form-label">Party Size</label>
           <input name="people" type="number" className="form-control" id="people" placeholder="5" required min="1" value={state.people} onChange={handleChange}/>
         </div>
-        <div className="col-6">
+        <div className="col-md-6">
           <label htmlFor="reservation_date" className="form-label">Date</label>
-          <input name="reservation_date" type="date" className="form-control" id="reservation_date" placeholder="YYYY-MM-DD" required value={state.reservation_date} onChange={handleChange}/>
+          <input name="reservation_date" type="date" className="form-control" id="reservation_date" placeholder="YYYY-MM-DD" aria-describedby="reservation_date_help" required value={state.reservation_date} onChange={handleChange}/>
+          <div id="reservation_date_help" className="form-text">Closed on Tuesday</div>
         </div>
         <div className="col-md-6">
           <label htmlFor="reservation_time" className="form-label">Time</label>
-          <input name="reservation_time" type="time" className="form-control" id="reservation_time" placeholder="HH:MM" value={state.reservation_time} onChange={handleChange}/>
-          <small>Hours 10:30am - 10:30pm | <strong>Last reservation at 9:30pm</strong></small>
+          <input name="reservation_time" type="time" className="form-control" id="reservation_time" placeholder="HH:MM" aria-describedby="reservation_time_help" value={state.reservation_time} onChange={handleChange}/>
+          <div id="reservation_time_help" className="form-text">Hours 10:30am - 10:30pm | <strong>Last reservation at 9:30pm</strong></div>
         </div>
-        <div className="col-12">
-          <button className="btn btn-secondary mr-2" onClick={ () => history.goBack() }>Cancel</button>
+        <div className="col-md-12">
+          <button type="button" className="btn btn-secondary mr-2" onClick={ () => history.goBack() }>Cancel</button>
           <button type="submit" className="btn btn-primary">Submit</button>
         </div>
       </form>
