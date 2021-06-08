@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-function Reservations({ reservations }) {
+function ListReservations({ reservations }) {
   
   if (!reservations) return null;
   return (
@@ -27,4 +27,4 @@ function Reservations({ reservations }) {
   )
 }
 
-export default Reservations;
+export default ListReservations;
