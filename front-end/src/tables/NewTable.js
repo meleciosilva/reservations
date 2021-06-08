@@ -45,7 +45,7 @@ function NewTable({ handleNewTable }) {
           <input name="capacity" type="number" className="form-control" id="capacity" min="1" required value={state.capacity} onChange={handleChange} />
         </div>
         <div>
-          <button className="btn btn-secondary mr-2" onClick={ () => history.goBack() }>Cancel</button>
+          <button type="button" className="btn btn-secondary mr-2" onClick={ () => history.goBack() }>Cancel</button>
           <button type="submit" className="btn btn-primary">Submit</button>
         </div>
       </form>
