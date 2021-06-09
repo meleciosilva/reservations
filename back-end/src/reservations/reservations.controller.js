@@ -1,48 +1,7 @@
 const asyncErrorBoundary = require("./../errors/asyncErrorBoundary");
 const reservationsService = require("./reservations.service");
-const { validate, Joi } = require('express-validation');
-
-// validation schema for creating reservation
-const createReservationValidation = {
-  body: Joi.object({
-    data: Joi.object({
-      first_name: Joi.string()
-        .min(1)
-        .max(20)
-        .required(),
-      last_name: Joi.string()
-        .min(1)
-        .max(20)
-        .required(),
-      mobile_number: Joi.string()
-        .pattern(new RegExp("^[\+]?[(]?[0-9]{0,3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$")).message("'mobile_number' should have a minimum of 7 digits'")
-        .required(),
-      people: Joi.number()
-        .strict()
-        .min(1)
-        .required(),
-      reservation_date: Joi.string()
-        .pattern(new RegExp("^[0-9]{4}-[0-9]{2}-[0-9]{2}$")).message("'reservation_date' should be formatted: 'YYYY-MM-DD'")
-        .required(),
-      reservation_time: Joi.string()
-        .pattern(new RegExp("^(?:[01][0-9]|2[0-3])[-:h][0-5][0-9]$")).message("'reservation_time' should be formatted as follows: 'HH:MM'")
-        .required(),
-      status: Joi.string()
-        .pattern(new RegExp("^booked$")).message("reservation status can only be 'booked', not 'seated' or 'finished'")
-        .required(),
-    })
-  })
-}
-
-const updateStatusValidation = {
-  body: Joi.object({
-    data: Joi.object({
-      status: Joi.string()
-        .pattern(new RegExp("^seated$|^finished$|^booked$")).message("unknown status - must be one of [booked, seated, finished]")
-        .required()
-    })
-  })
-}
+const { createReservationValidation, updateStatusValidation } = require("./reservations.schemas");
+const { validate } = require('express-validation');
 
 // Validation Middleware
 
@@ -131,7 +90,7 @@ async function update(req, res) {
   // if PUT request made to update status, then return new status
   if (req.originalUrl.includes("status")) {
     const { status } = data[0];
-    return res.json({ data: {status} });
+    return res.json({ data: { status } });
   }
   res.json({ data });
 }
