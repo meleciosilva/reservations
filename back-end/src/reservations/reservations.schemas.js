@@ -25,8 +25,7 @@ const createReservationValidation = {
         .pattern(new RegExp("^(?:[01][0-9]|2[0-3])[-:h][0-5][0-9]$")).message("'reservation_time' should be formatted as follows: 'HH:MM'")
         .required(),
       status: Joi.string()
-        .pattern(new RegExp("^booked$")).message("reservation status can only be 'booked', not 'seated' or 'finished'")
-        .required(),
+        .pattern(new RegExp("^booked$")).message("reservation status can only be 'booked', not 'seated' or 'finished'"),
     })
   })
 }
