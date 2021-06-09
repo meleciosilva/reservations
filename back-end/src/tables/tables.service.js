@@ -40,13 +40,45 @@ function readReservation(reservationId) {
     .first();
 }
 
-function updateReservation(updatedReservation) {
-  return knex("reservations as r")
-  .select("*")  
-  .where({ "r.reservation_id": updatedReservation.reservation_id })
-  .update(updatedReservation, "*");
+function deleteTableAndUpdateReservation(table, reservationId) {
+  return knex.transaction(trx => {
+    return trx("tables as t")
+      .where({ "t.table_id": table.table_id }).del()
+      .then(() => trx.insert(table).into("tables"))
+      .then(() => {
+        return trx("reservations as r")
+          .select("*")
+          .where({ "r.reservation_id": reservationId })
+          .first();
+      })
+      .then(reservation => {
+        reservation.status = "finished";
+        return reservation;
+      })
+      .then(updatedReservation => {
+        return trx("reservations as r")
+          .select("*")  
+          .where({ "r.reservation_id": updatedReservation.reservation_id })
+          .update(updatedReservation)
+      })
+  });
 }
 
+function updateTableAndReservationStatus(updatedTable, updatedReservation) {
+  return knex.transaction(trx => {
+    return trx("tables as t")
+      .select("*")  
+      .where({ "t.table_id": updatedTable.table_id })
+      .update(updatedTable)
+      .then(() => {
+        return knex("reservations as r")
+          .select("*")  
+          .where({ "r.reservation_id": updatedReservation.reservation_id })
+          .update(updatedReservation, "*");
+      });
+    });
+}
+  
 module.exports = {
   list,
   create,
@@ -54,5 +86,6 @@ module.exports = {
   update,
   destroy,
   readReservation,
-  updateReservation
+  deleteTableAndUpdateReservation,
+  updateTableAndReservationStatus,
 }
