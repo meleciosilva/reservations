@@ -120,7 +120,6 @@ async function update(req, res, next) {
     table_id: originalTable.table_id
   }
   await tablesService.update(updatedTable);
-  // res.json({ data });
   next();
 }
 
