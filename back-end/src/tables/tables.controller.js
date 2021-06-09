@@ -31,7 +31,7 @@ const seatReservationValidation = {
   })
 }
 
-// Validation Middleware
+// Table Validation Middleware
 
 async function tableExists(req, res, next) {
   const table = await tablesService.read(req.params.tableId);
@@ -55,6 +55,8 @@ function isTableOccupied(req, res, next) {
   }
   next();
 }
+
+// Reservation Validation Middleware
 
 async function reservationExists(req, res, next) {
   const reservation = await tablesService.readReservation(req.body.data.reservation_id);
@@ -94,7 +96,7 @@ function reservationCanBeSeated(req, res, next) {
   next();
 }
 
-//Router-level Middleware
+// Router-level Middleware
 
 async function list(req, res) {
   const data = await tablesService.list();
@@ -112,42 +114,34 @@ async function create(req, res) {
   res.status(201).json({ data });
 }
 
-async function update(req, res, next) {
-  const originalTable = res.locals.table;
+// updates table with reservation_id AND updates reservation status to "seated"
+function updateTableAndReservationStatus(req, res, next) {
+  const { reservation_id } = req.body.data;
   const updatedTable = {
-    ...originalTable,
-    ...req.body.data,
-    table_id: originalTable.table_id
+    ...res.locals.table,
+    reservation_id, 
+    table_id: res.locals.table.table_id
   }
-  await tablesService.update(updatedTable);
-  next();
-}
 
-function destroy(req, res, next) {
-  const reservationId = res.locals.table.reservation_id;
-  res.locals.table.reservation_id = null; // removes reservation_id from table
-  tablesService
-    .destroy(res.locals.table.table_id)
-    .then(() => tablesService.create(res.locals.table))
-    .then(() => tablesService.readReservation(reservationId))
-    .then((reservation) => {
-      reservation.status = "finished";
-      return reservation;
-    })
-    .then((reservation) => tablesService.updateReservation(reservation))
-    .then(() => res.json({ data: { message: "Successfully Deleted" } }))
+  const originalReservation = res.locals.reservation;
+  const updatedReservation = {
+    ...originalReservation,
+    status: "seated",
+    reservation_id: originalReservation.reservation_id
+  }
+
+  return tablesService.updateTableAndReservationStatus(updatedTable, updatedReservation)
+    .then((data) => res.json({ data }))
     .catch(next);
 }
 
-async function updateReservation(req, res) {
-  const originalReservation = res.locals.reservation;
-  originalReservation.status = "seated";
-  const updatedReservation = {
-    ...originalReservation,
-    reservation_id: originalReservation.reservation_id
-  }
-  const data = await tablesService.updateReservation(updatedReservation);
-  res.json({ data });
+function deleteTableAndUpdateReservation(req, res, next) {
+  const reservationId = res.locals.table.reservation_id;
+  res.locals.table.reservation_id = null;  // removes reservation_id from table 
+
+  return tablesService.deleteTableAndUpdateReservation(res.locals.table, reservationId)
+    .then(() => res.json({ data: { message: "Reservation Successfully Finished" } }))
+    .catch(next);
 }
 
 module.exports = {
@@ -165,12 +159,11 @@ module.exports = {
     asyncErrorBoundary(tableExists),
     asyncErrorBoundary(reservationExists),
     reservationCanBeSeated,
-    asyncErrorBoundary(update),
-    asyncErrorBoundary(updateReservation),
+    updateTableAndReservationStatus,
   ],
   delete: [
     asyncErrorBoundary(tableExists),
     isTableOccupied,
-    destroy,
+    deleteTableAndUpdateReservation,
   ],
 }
