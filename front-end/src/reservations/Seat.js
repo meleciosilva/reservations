@@ -3,7 +3,7 @@ import { useParams, useHistory } from "react-router-dom";
 import { seatReservation } from "../utils/api";
 import ErrorAlert from "./ErrorAlert";
 
-function Seat({ tables, handleUpdateTable }) {
+function Seat({ tables, handleUpdateTableAndReservation }) {
   const [tableId, setTableId] = useState("");
   const [errors, setErrors] = useState(null);
   
@@ -19,8 +19,8 @@ function Seat({ tables, handleUpdateTable }) {
   function handleSubmit(e) {
     e.preventDefault();
     seatReservation(reservation_id, tableId)
-      .then((updatedTables) => updatedTables[0])
-      .then((handleUpdateTable))
+      .then((updatedRecords) => updatedRecords[0])
+      .then((updatedReservation) => handleUpdateTableAndReservation(updatedReservation, tableId))
       .then(() => history.push("/dashboard"))
       .catch(err => setErrors([err]))
   }

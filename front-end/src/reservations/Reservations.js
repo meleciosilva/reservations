@@ -3,7 +3,7 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import Seat from "./Seat";
 import NewReservation from "./NewReservation";
 
-function Reservations({ reservations, tables, handleUpdateTable }) {
+function Reservations({ reservations, tables, handleUpdateTableAndReservation }) {
 
   return (
     <Switch>
@@ -11,7 +11,7 @@ function Reservations({ reservations, tables, handleUpdateTable }) {
         <Redirect to="/dashboard" />
       </Route>
       <Route path="/reservations/:reservation_id/seat">
-        <Seat reservations={reservations} tables={tables} handleUpdateTable={handleUpdateTable}/>
+        <Seat reservations={reservations} tables={tables} handleUpdateTableAndReservation={handleUpdateTableAndReservation}/>
       </Route>
       <Route path="/reservations/new">
         <NewReservation tables={tables} />

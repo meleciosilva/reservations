@@ -1,35 +1,7 @@
 const asyncErrorBoundary = require("./../errors/asyncErrorBoundary");
 const reservationsService = require("./reservations.service");
-const { validate, Joi } = require('express-validation');
-
-// validation schema for creating reservation
-const createReservationValidation = {
-  body: Joi.object({
-    data: Joi.object({
-      first_name: Joi.string()
-        .min(1)
-        .max(20)
-        .required(),
-      last_name: Joi.string()
-        .min(1)
-        .max(20)
-        .required(),
-      mobile_number: Joi.string()
-        .pattern(new RegExp("^[\+]?[(]?[0-9]{0,3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$")).message("'mobile_number' should have a minimum of 7 digits'")
-        .required(),
-      people: Joi.number()
-        .strict()
-        .min(1)
-        .required(),
-      reservation_date: Joi.string()
-        .pattern(new RegExp("^[0-9]{4}-[0-9]{2}-[0-9]{2}$")).message("'reservation_date' should be formatted: 'YYYY-MM-DD'")
-        .required(),
-      reservation_time: Joi.string()
-        .pattern(new RegExp("^(?:[01][0-9]|2[0-3])[-:h][0-5][0-9]$")).message("'reservation_time' should be formatted as follows: 'HH:MM'")
-        .required(),
-    })
-  })
-}
+const { createReservationValidation, updateStatusValidation } = require("./reservations.schemas");
+const { validate } = require('express-validation');
 
 // Validation Middleware
 
@@ -76,12 +48,23 @@ async function reservationExists(req, res, next) {
   next();
 }
 
+function isStatusFinished(req, res, next) {
+  const { status, first_name, last_name } = res.locals.reservation;
+  if (status === "finished") {
+    return next({
+      status: 400,
+      message: `${first_name} ${last_name}'s reservation cannot be updated because it is already finished`
+    });
+  }
+  next();
+}
+
 // Router-level Middleware
 
 async function list(req, res) {
   const { date } = req.query;
   const data = await reservationsService.list();
-  const byResult = date ? reservation => JSON.stringify(reservation.reservation_date).includes(date) : () => true;
+  const byResult = date ? reservation => JSON.stringify(reservation.reservation_date).includes(date) && reservation.status !== "finished" : () => true;
   res.json({ data: data.filter(byResult) });
 }
 
@@ -99,10 +82,16 @@ async function create(req, res) {
 async function update(req, res) {
   const originalReservation = res.locals.reservation;
   const newReservation = {
+    ...originalReservation, // added to supplement PUT requests made to update status due to minimal request body
     ...req.body.data,
     reservation_id: originalReservation.reservation_id
   }
   const data = await reservationsService.update(newReservation);
+  // if PUT request made to update status, then return new status
+  if (req.originalUrl.includes("status")) {
+    const { status } = data[0];
+    return res.json({ data: { status } });
+  }
   res.json({ data });
 }
 
@@ -127,6 +116,12 @@ module.exports = {
     validate(createReservationValidation, { keyByField: true }, {}),
     asyncErrorBoundary(reservationExists),
     scheduleWhileOpen,
+    asyncErrorBoundary(update),
+  ],
+  updateStatus: [
+    validate(updateStatusValidation, { keyByField: true }, {}),
+    asyncErrorBoundary(reservationExists),
+    isStatusFinished,
     asyncErrorBoundary(update),
   ],
   delete: [
