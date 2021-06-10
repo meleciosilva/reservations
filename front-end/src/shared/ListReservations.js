@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 import { formatAsDate, formatAsTime } from "../utils/date-time";
 
 function ListReservations({ reservations }) {
-  if (!reservations) return <h2>No Reservations Found</h2>;
-  if (!reservations.length) return <h2>No Reservations Found</h2>;
+  if (!reservations) return <h2>No reservations found</h2>;
+  if (!reservations.length) return <h2>No reservations found</h2>;
   return (
     <div>
       <h2>Reservations</h2>
