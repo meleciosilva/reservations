@@ -1,14 +1,8 @@
 import ErrorAlert from "../layout/ErrorAlert";
 import ButtonGroup from "./ButtonGroup";
-import ListReservations from "./ListReservations";
+import ListReservations from "../shared/ListReservations";
 import ListTables from "./ListTables";
 
-/**
- * Defines the dashboard page.
- * @param date
- *  the date for which the user wants to view reservations.
- * @returns {JSX.Element}
- */
 function Dashboard(props) {
 
   return (

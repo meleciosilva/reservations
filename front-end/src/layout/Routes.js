@@ -9,6 +9,7 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import Dashboard from "../dashboard/Dashboard";
 import Reservations from "../reservations/Reservations";
 import Tables from "../tables/Tables";
+import Search from "../search/Search";
 import NotFound from "./NotFound";
 
 function Routes() {
@@ -108,6 +109,9 @@ function Routes() {
           tables={tables} 
           handleNewTable={handleNewTable} 
         />
+      </Route>
+      <Route path="/search">
+        <Search />
       </Route>
       <Route>
         <NotFound />

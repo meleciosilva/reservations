@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
+import { formatAsDate, formatAsTime } from "../utils/date-time";
 
 function ListReservations({ reservations }) {
-  
-  if (!reservations) return null;
+  if (!reservations) return <h2>No reservations found</h2>;
+  if (!reservations.length) return <h2>No reservations found</h2>;
   return (
     <div>
       <h2>Reservations</h2>
@@ -15,8 +16,9 @@ function ListReservations({ reservations }) {
                 <h5 className="font-weight-bold">Party: { reservation.people }</h5>
               </div>
               <div className="card-body">
-                <h5 className="card-title">Time</h5>
-                <p className="card-text">{ reservation.reservation_time }</p>
+                <h5 className="card-title">When</h5>
+                <p className="card-text">Date: { formatAsDate(reservation.reservation_date) }</p>
+                <p className="card-text">Time: { formatAsTime(reservation.reservation_time) }</p>
                 <h5 className="card-title">Contact Number</h5>
                 <p className="card-text">{ reservation.mobile_number }</p>
                 <h5 className="card-title">Status</h5>

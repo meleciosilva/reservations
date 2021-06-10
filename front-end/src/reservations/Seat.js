@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { seatReservation } from "../utils/api";
-import ErrorAlert from "./ErrorAlert";
+import ErrorAlert from "../shared/ErrorAlert";
 
 function Seat({ tables, handleUpdateTableAndReservation }) {
   const [tableId, setTableId] = useState("");
