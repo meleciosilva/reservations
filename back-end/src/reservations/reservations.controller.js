@@ -62,8 +62,10 @@ function isStatusFinished(req, res, next) {
 // Router-level Middleware
 
 async function list(req, res) {
-  const { date } = req.query;
-  const data = await reservationsService.list();
+  const { date, mobile_number } = req.query;
+  let data = mobile_number ? await reservationsService.search(mobile_number) : await reservationsService.list();
+  if (mobile_number) return res.json({ data });
+
   const byResult = date ? reservation => JSON.stringify(reservation.reservation_date).includes(date) && reservation.status !== "finished" : () => true;
   res.json({ data: data.filter(byResult) });
 }
