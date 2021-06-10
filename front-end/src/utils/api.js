@@ -125,6 +125,11 @@ async function deleteTable(tableId, signal) {
   return await fetchJson(url, options);
 }
 
+async function listAllReservations(number, signal) {
+  const url = new URL(`${API_BASE_URL}/reservations?mobile_number=${number}`);
+  return await fetchJson(url, { headers, signal }, []);
+}
+
 export {
   listReservations,
   createReservation,
@@ -132,4 +137,5 @@ export {
   seatReservation,
   fetchTables,
   deleteTable,
+  listAllReservations,
 };
