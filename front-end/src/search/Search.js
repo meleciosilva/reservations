@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Switch, Route } from "react-router-dom";
-import { listAllReservations } from "../utils/api";
+import { listReservationsByNumber } from "../utils/api";
 import SearchBar from "./SearchBar";
 import ListReservations from "../shared/ListReservations";
 import ErrorAlert from "../shared/ErrorAlert";
@@ -16,7 +16,7 @@ function Search() {
   function fetchReservations() {
     const abortController = new AbortController();
     setErrors(null);
-    listAllReservations(number, abortController.signal)
+    listReservationsByNumber(number, abortController.signal)
       .then(setReservations)
       .catch(setErrors);
     return () => abortController.abort();
