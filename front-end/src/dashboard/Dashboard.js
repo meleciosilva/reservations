@@ -14,7 +14,7 @@ function Dashboard(props) {
       <ButtonGroup date={props.date} handleDate={props.handleDate}/>
       <ErrorAlert error={props.errors} />
       <ListTables tables={props.tables} handleFreeTableAndFinishReservation={props.handleFreeTableAndFinishReservation}/>
-      <ListReservations reservations={props.reservations} />
+      <ListReservations reservations={props.reservations} handleCancelReservation={props.handleCancelReservation} />
     </main>
   );
 }

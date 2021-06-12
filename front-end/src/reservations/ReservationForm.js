@@ -1,12 +1,16 @@
-import { useState } from "react";
-import { useHistory } from "react-router-dom";
-import { createReservation } from "../utils/api";
+import { useState, useEffect } from "react";
+import { useHistory, useLocation, useRouteMatch } from "react-router-dom";
+import { createReservation, editReservation, fetchReservation } from "../utils/api";
+import { formatAsDate, formatAsTime } from "../utils/date-time";
 import ErrorAlert from "../shared/ErrorAlert";
 
 
-function NewReservation() {
+function ReservationForm({ handleNewReservation, handleUpdateReservation }) {
   const history = useHistory();
+  const { pathname } = useLocation();
+  const { params: { reservation_id } } = useRouteMatch();
 
+  const [isEdit, setIsEdit] = useState(false);
   const [errors, setErrors] = useState(null);
   const [state, setState] = useState({
     first_name: "",
@@ -16,6 +20,28 @@ function NewReservation() {
     reservation_date: "",
     reservation_time: "",
   });
+
+  useEffect(createOrEdit, [pathname, reservation_id]);
+
+  function createOrEdit() {
+    if (pathname.includes("edit")) {
+      fetchReservation(reservation_id)
+        .then((data) => {
+          setState({ 
+            first_name: data.first_name,
+            last_name: data.last_name,
+            mobile_number: data.mobile_number,
+            people: data.people, 
+            reservation_date: formatAsDate(data.reservation_date),
+            reservation_time: formatAsTime(data.reservation_time)
+          });
+        })
+        .then(() => setIsEdit(true))
+        .catch(setErrors)
+    } else {
+      setIsEdit(false);
+    } 
+  }
 
   function handleErrors() {
     const errors = [];
@@ -51,20 +77,30 @@ function NewReservation() {
     });
   }
 
-  const handleSubmit = (e) => {
+  const handleCreate = (e) => {
     e.preventDefault();
     createReservation(state)
-      .then(() => history.push(`/dashboard?date=${state.reservation_date}`))
+      .then(() => handleNewReservation(state))
+      .then(() => history.push("/dashboard"))
+      .catch(handleErrors);
+  }
+
+  const handleEdit = (e) => {
+    e.preventDefault();
+    console.log(reservation_id, state)
+    editReservation(reservation_id, state)
+      .then(() => handleUpdateReservation(state))
+      .then(() => history.push("/dashboard"))
       .catch(handleErrors);
   }
   
   return (
     <div>
-      <h1>New Reservation</h1>
+      { isEdit ? <h1>Edit Reservation</h1> : <h1>New Reservation</h1> }
       <hr />
       <ErrorAlert errors={errors} />
 
-      <form className="row g-3" onSubmit={handleSubmit}>
+      <form className="row g-3" onSubmit={ isEdit ? handleEdit : handleCreate }>
         <div className="col-md-6">
           <label htmlFor="first_name" className="form-label">First Name</label>
           <input name="first_name" type="text" className="form-control" id="first_name" placeholder="John" required minLength="2" maxLength="20" value={state.first_name} onChange={handleChange}/>
@@ -101,4 +137,4 @@ function NewReservation() {
   )
 }
 
-export default NewReservation;
+export default ReservationForm;
