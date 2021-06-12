@@ -89,9 +89,10 @@ async function update(req, res) {
     reservation_id: originalReservation.reservation_id
   }
   const data = await reservationsService.update(newReservation);
+  
   // if PUT request made to update status, then return new status
   if (req.originalUrl.includes("status")) {
-    const { status } = data[0];
+    const { status } = data;
     return res.json({ data: { status } });
   }
   res.json({ data });
