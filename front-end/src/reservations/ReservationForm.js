@@ -87,7 +87,6 @@ function ReservationForm({ handleNewReservation, handleUpdateReservation }) {
 
   const handleEdit = (e) => {
     e.preventDefault();
-    console.log(reservation_id, state)
     editReservation(reservation_id, state)
       .then(() => handleUpdateReservation(state))
       .then(() => history.push("/dashboard"))
