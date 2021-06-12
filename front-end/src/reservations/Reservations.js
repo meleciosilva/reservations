@@ -1,20 +1,26 @@
 import { Redirect, Route, Switch } from "react-router-dom";
 
 import Seat from "./Seat";
-import NewReservation from "./NewReservation";
+import ReservationForm from "./ReservationForm";
 
-function Reservations({ reservations, tables, handleUpdateTableAndReservation }) {
-
+function Reservations(props) {
+  const { tables, handleUpdateTableAndReservation, handleUpdateReservation, handleNewReservation } = props;
   return (
     <Switch>
       <Route exact={true} path="/reservations">
         <Redirect to="/dashboard" />
       </Route>
       <Route path="/reservations/:reservation_id/seat">
-        <Seat reservations={reservations} tables={tables} handleUpdateTableAndReservation={handleUpdateTableAndReservation}/>
+        <Seat 
+          tables={tables} 
+          handleUpdateTableAndReservation={handleUpdateTableAndReservation}
+        />
       </Route>
-      <Route path="/reservations/new">
-        <NewReservation tables={tables} />
+      <Route path={["/reservations/:reservation_id/edit", "/reservations/new"]}>
+        <ReservationForm
+          handleNewReservation={handleNewReservation}
+          handleUpdateReservation={handleUpdateReservation}
+        />
       </Route>
     </Switch>
   )
