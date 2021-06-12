@@ -24,7 +24,9 @@ function update(updatedReservation) {
   return knex("reservations as r")
     .select("*")
     .where({ "r.reservation_id": updatedReservation.reservation_id })
-    .update(updatedReservation, "*")
+    .update(updatedReservation)
+    .returning("*")
+    .then(updatedRecords => updatedRecords[0]);
   }
 
 function destroy(reservation_id) {
