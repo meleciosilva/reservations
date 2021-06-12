@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
-import { listReservations, fetchTables, deleteTable } from "../utils/api";
-import { today } from "../utils/date-time";
+import { listReservations, fetchTables, deleteTable, cancelReservation } from "../utils/api";
+import { today, formatAsDate } from "../utils/date-time";
 import useQuery from "./../utils/useQuery";
 
 import { Redirect, Route, Switch } from "react-router-dom";
@@ -17,11 +17,11 @@ function Routes() {
   const query = useQuery();
   const history = useHistory();
 
+  // sets date to date found in query or today's date by default
+  const [date, setDate] = useState(query.get("date") || today());
   const [reservations, setReservations] = useState([]);
   const [errors, setErrors] = useState(null);
   const [tables, setTables] = useState(null);
-  // sets date to date found in query or today's date by default
-  const [date, setDate] = useState(query.get("date") || today());
   const [isSubmit, setIsSubmit] = useState(false);
 
   useEffect(fetchAll, [date, isSubmit]);
@@ -47,6 +47,29 @@ function Routes() {
     setTables(prevState => [...prevState, newTable]);
   }
 
+  function handleNewReservation(newReservation) {
+    setDate(newReservation.reservation_date);
+    setReservations(prevState => ([...prevState, newReservation]));
+  }
+
+  function handleUpdateReservation(updatedReservation) {
+    setDate(updatedReservation.reservation_date);
+    const index = reservations.find(reservation => Number(reservation.reservation_id) === Number(updatedReservation.reservation_id));
+    setReservations(prevState => {
+      prevState.splice(index, 1, updatedReservation)
+    });
+  }
+
+  function handleCancelReservation(reservationId) {
+    const confirmed = window.confirm("Do you want to cancel this reservation? This cannot be undone.");
+    if (confirmed) {
+      cancelReservation(reservationId)
+        .then(() => setIsSubmit(!isSubmit))
+        .catch(setErrors)
+    }
+  }
+
+  // adds reservation_id to selected table and updates reservation status to "booked"
   function handleUpdateTableAndReservation(updatedReservation, tableId) {
     const table = tables.find(table => Number(table.table_id) === Number(tableId));
     const tableIndex = tables.indexOf(table);
@@ -56,9 +79,10 @@ function Routes() {
       prevState.splice(tableIndex, 1, updatedTable);
       return prevState;
     })
-    setIsSubmit(!isSubmit);
+    setDate(formatAsDate(updatedReservation.reservation_date));
   }
 
+  // removes reservation_id from table and updates reservation status to "finished"
   function handleFreeTableAndFinishReservation(tableId) {
     const confirmed = window.confirm("Is this table ready to seat new guests? This cannot be undone.");
     if (confirmed) {
@@ -90,17 +114,21 @@ function Routes() {
       </Route>
       <Route path="/dashboard">
         <Dashboard 
-          date={date} handleDate={handleDate}
-          errors={errors} reservations={reservations}
+          date={date} 
+          handleDate={handleDate}
+          errors={errors} 
+          reservations={reservations}
           tables={tables} 
-          handleFreeTableAndFinishReservation={handleFreeTableAndFinishReservation} 
+          handleFreeTableAndFinishReservation={handleFreeTableAndFinishReservation}
+          handleCancelReservation={handleCancelReservation}
         />
       </Route>
       <Route path="/reservations">
         <Reservations 
-          reservations={reservations} 
-          tables={tables} 
-          handleUpdateTableAndReservation={handleUpdateTableAndReservation} 
+          tables={tables}
+          handleUpdateTableAndReservation={handleUpdateTableAndReservation}
+          handleNewReservation={handleNewReservation}
+          handleUpdateReservation={handleUpdateReservation}
         />
       </Route>
       <Route path="/tables">
