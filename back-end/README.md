@@ -1,5 +1,7 @@
-# Capstone: Restaurant Reservation System Backend
+# Restaurant Reservations: Back-End
 
-This starter code for the backend of the capstone project in the Thinkful curriculum.
+[Restaurant Reservations: Front-End](../front-end/README.md)
 
-See [../README.md](../README.md) for detailed instructions.
+## Link
+
+[Restaurant Reservations](https://restaurant-reservation-frontend-gilt.vercel.app/dashboard?date=2020-12-30)
