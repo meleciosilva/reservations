@@ -3,6 +3,8 @@ const { Joi } = require('express-validation');
 const createReservationValidation = {
   body: Joi.object({
     data: Joi.object({
+      reservation_id: Joi.number()
+        .min(1),
       first_name: Joi.string()
         .min(1)
         .max(20)
@@ -26,6 +28,8 @@ const createReservationValidation = {
         .required(),
       status: Joi.string()
         .pattern(new RegExp("^booked$")).message("reservation status can only be 'booked', not 'seated' or 'finished'"),
+      created_at: Joi.date(),
+      updated_at: Joi.date(),
     })
   })
 }
@@ -34,7 +38,7 @@ const updateStatusValidation = {
   body: Joi.object({
     data: Joi.object({
       status: Joi.string()
-        .pattern(new RegExp("^seated$|^finished$|^booked$")).message("unknown status - must be one of [booked, seated, finished]")
+        .pattern(new RegExp("^seated$|^finished$|^booked$|^cancelled$")).message("unknown status - must be one of [booked, seated, finished, cancelled]")
         .required()
     })
   })
