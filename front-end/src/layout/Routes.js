@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
-import { listReservations, fetchTables, deleteTable, cancelReservation } from "../utils/api";
-import { today, formatAsDate } from "../utils/date-time";
+import { listReservations, fetchTables, deleteTable, cancelReservation, seatReservation } from "../utils/api";
+import { today } from "../utils/date-time";
 import useQuery from "./../utils/useQuery";
 
 import { Redirect, Route, Switch } from "react-router-dom";
@@ -70,16 +70,22 @@ function Routes() {
   }
 
   // adds reservation_id to selected table and updates reservation status to "booked"
-  function handleUpdateTableAndReservation(updatedReservation, tableId) {
+  function handleUpdateTableAndReservation(reservationId, tableId) {
     const table = tables.find(table => Number(table.table_id) === Number(tableId));
     const tableIndex = tables.indexOf(table);
-    const updatedTable = { ...table, reservation_id: updatedReservation.reservation_id };
     
-    setTables(prevState => {
-      prevState.splice(tableIndex, 1, updatedTable);
-      return prevState;
-    })
-    setDate(formatAsDate(updatedReservation.reservation_date));
+    seatReservation(reservationId, tableId)
+      .then((updatedReservation) => {
+        const updatedTable = { ...table, reservation_id: updatedReservation.reservation_id };
+        return updatedTable;
+      })
+      .then((updatedTable) => setTables(prevState => {
+        prevState.splice(tableIndex, 1, updatedTable);
+        return prevState;
+      }))
+      .then(() => setIsSubmit(!isSubmit))
+      .then(() => history.push(`/dashboard?date=${date}`))
+      .catch(setErrors);
   }
 
   // removes reservation_id from table and updates reservation status to "finished"
@@ -132,11 +138,7 @@ function Routes() {
         />
       </Route>
       <Route path="/tables">
-        <Tables 
-          reservations={reservations} 
-          tables={tables} 
-          handleNewTable={handleNewTable} 
-        />
+        <Tables handleNewTable={handleNewTable} />
       </Route>
       <Route path="/search">
         <Search />
