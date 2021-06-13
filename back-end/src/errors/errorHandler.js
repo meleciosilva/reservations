@@ -1,7 +1,3 @@
-/**
- * Express API error handler.
- */
-
 const { ValidationError } = require('express-validation');
 
 function errorHandler(error, request, response, next) {
