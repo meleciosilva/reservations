@@ -126,9 +126,9 @@ function ReservationForm({ handleNewReservation, handleUpdateReservation }) {
           <input name="reservation_time" type="time" className="form-control" id="reservation_time" placeholder="HH:MM" aria-describedby="reservation_time_help" value={state.reservation_time} onChange={handleChange}/>
           <div id="reservation_time_help" className="form-text">Hours 10:30am - 10:30pm | <strong>Last reservation at 9:30pm</strong></div>
         </div>
-        <div className="col-md-12">
-          <button type="button" className="btn btn-secondary mr-2" onClick={ () => history.goBack() }>Cancel</button>
-          <button type="submit" className="btn btn-primary">Submit</button>
+        <div className="btn-group d-flex pb-4" role="group" aria-label="buttons">
+          <button type="button" className="btn btn accentBackground2 lightText mr-2" onClick={ () => history.goBack() }>Cancel</button>
+          <button type="submit" className="btn btn darkBackground lightText">Submit</button>
         </div>
       </form>
       
