@@ -8,8 +8,8 @@ function Dashboard(props) {
   return (
     <main>
       <h1>Dashboard</h1>
-      <div className="d-md-flex mb-3">
-        <h4 className="mb-0">Reservations for { props.date }</h4>
+      <div className="my-4">
+        <h2>Reservations for { props.date }</h2>
       </div>
       <ButtonGroup date={props.date} handleDate={props.handleDate}/>
       <ErrorAlert error={props.errors} />
