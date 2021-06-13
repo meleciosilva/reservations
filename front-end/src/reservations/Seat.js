@@ -2,9 +2,8 @@ import { useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import ErrorAlert from "../shared/ErrorAlert";
 
-function Seat({ tables, handleUpdateTableAndReservation }) {
+function Seat({ tables, handleUpdateTableAndReservation, errors }) {
   const [tableId, setTableId] = useState("");
-  const [errors, setErrors] = useState(null);
   
   const history = useHistory();
   const { reservation_id } = useParams();
@@ -28,18 +27,21 @@ function Seat({ tables, handleUpdateTableAndReservation }) {
       <hr />
       <ErrorAlert errors={errors} />
 
-      <form onSubmit={handleSubmit}>
-        <div className="col-md-12 mb-2">
-          <select name="table_id" className="form-select" onChange={handleChange}>
-            <option defaultValue>Open to Select a Table Number</option>
-            { tables.map(table => <option key={table.table_id} id={table.table_id}>{table.table_name} - {table.capacity}</option>) }
-          </select>
-        </div>
-        <div className="col-md-12">
-          <button type="button" className="btn btn-secondary mr-2" onClick={ () => history.goBack() }>Cancel</button>
-          <button type="submit" className="btn btn-primary" disabled={!tableId} >Submit</button>
-        </div>
-      </form>
+      <div className="row d-flex justify-content-center">
+        <form className="col-xs-12 col-md-8 col-lg-6" onSubmit={handleSubmit}>
+          <div className="mb-2">
+            <select name="table_id" className="form-select" onChange={handleChange}>
+              <option defaultValue>Open to Select a Table Number</option>
+              { tables.map(table => <option key={table.table_id} id={table.table_id}>{table.table_name} - {table.capacity}</option>) }
+            </select>
+          </div>
+          <div className="btn-group d-flex" role="group" aria-label="buttons">
+            <button type="button" className="btn accentBackground2 lightText mr-1" onClick={ () => history.goBack() }>Cancel</button>
+            <button type="submit" className="btn darkBackground lightText ml-1" disabled={!tableId} >Submit</button>
+          </div>
+        </form>
+      </div>
+      
     </div>
   )
 }
