@@ -4,6 +4,7 @@ const createReservationValidation = {
   body: Joi.object({
     data: Joi.object({
       reservation_id: Joi.number()
+        .strict()
         .min(1),
       first_name: Joi.string()
         .min(1)
