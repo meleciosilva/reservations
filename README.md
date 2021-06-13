@@ -1,6 +1,8 @@
 
 # Restaurant Reservations System
 
+## Summary
+
 Restaurant Reservations System is a platform designed for fine dining restaurants. The software is used only by restaurant personnel when a customer calls to request a reservation.
 
 In addition to making reservations, this application helps streamline reservation management in the following ways:
@@ -339,7 +341,3 @@ Seed data with the following commands:
 **Front End:** React, Bootstrap
 
 **Back End:** Node, Express, PostgreSQL
-
-## Lessons Learned
-
-What did you learn while building this project? What challenges did you face and how did you overcome them?
