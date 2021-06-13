@@ -8,10 +8,8 @@ function Layout() {
   return (
     <div className="container-fluid">
       <div className="row h-100">
-        <div className="col-md-2 side-bar">
           <Menu />
-        </div>
-        <div className="col">
+        <div className="col px-4 pt-3">
           <Routes />
         </div>
       </div>
