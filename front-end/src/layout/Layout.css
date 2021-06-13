@@ -1,4 +1,66 @@
-.side-bar {
-  background-color: #393a44;
-  min-width: 200px;
+html, #root {
+  background-color: #F1F3F2;
+}
+
+.darkBackground {
+  background-color: #32374B;
+}
+
+.accentBackground {
+  background-color:rgb(31, 33, 43);
+}
+
+.accentBackground2 {
+  background-color: #6F767F;
+}
+
+.lightBackground {
+  background-color: #F1F3F2;
+}
+
+.lightText {
+  color: #F1F3F2;
+}
+
+.darkText {
+  color: #32374B;
+}
+
+.darkBorder {
+  border: 3px solid #32374B;
+  border-radius: 6px;
+}
+
+nav.navbar a > * {
+  color: #F1F3F2;
+}
+
+nav.navbar a > span {
+  font-size: 20px;
+}
+
+button.btn:hover, a.btn:hover {
+  background-color: none;
+  color: #F1F3F2;
+  transform: scale(.99);
+}
+
+.cardSize {
+  font-size: 20px;
+}
+
+#navBar {
+  padding: 0 10px;
+}
+
+@media (max-width: 768px) {
+
+  nav.navbar a > h1 {
+    font-size: 50px;
+  }
+
+  nav.navbar a > span {
+    font-size: 20px;
+  }
+
 }
