@@ -4,7 +4,7 @@ import Seat from "./Seat";
 import ReservationForm from "./ReservationForm";
 
 function Reservations(props) {
-  const { tables, handleUpdateTableAndReservation, handleUpdateReservation, handleNewReservation } = props;
+  const { tables, handleUpdateTableAndReservation, handleUpdateReservation, handleNewReservation, errors } = props;
   return (
     <Switch>
       <Route exact={true} path="/reservations">
@@ -14,6 +14,7 @@ function Reservations(props) {
         <Seat 
           tables={tables} 
           handleUpdateTableAndReservation={handleUpdateTableAndReservation}
+          errors={errors}
         />
       </Route>
       <Route path={["/reservations/:reservation_id/edit", "/reservations/new"]}>
