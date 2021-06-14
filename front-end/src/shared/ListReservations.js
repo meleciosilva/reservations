@@ -20,8 +20,8 @@ function ListReservations({ reservations, handleCancelReservation }) {
       <div className="row py-3">
         { validReservations.map((reservation, index) => (
           <div className="col-xs-12 col-sm-6 col-md-4" key={ index }>
-            <div className="card mb-2 darkBorder">
-              <div className="card-header d-flex justify-content-between">
+            <div className="card mb-3 darkBorder">
+              <div className="card-header d-flex justify-content-between darkBorder darkBackground lightText pt-3">
                 <h4 className="font-weight-bold">{ reservation.first_name } { reservation.last_name }</h4>
                 <h4 className="font-weight-bold">Party: { reservation.people }</h4>
               </div>
