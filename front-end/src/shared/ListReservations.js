@@ -26,10 +26,10 @@ function ListReservations({ reservations, handleCancelReservation }) {
                 <h4 className="font-weight-bold">Party: { reservation.people }</h4>
               </div>
               <div className="card-body">
-                <p className="py-2 cardSize"><strong>Date</strong>: { formatAsDate(reservation.reservation_date) }</p>
-                <p className="py-2 cardSize"><strong>Time</strong>: { formatAsTime(reservation.reservation_time) }</p>
-                <p className="py-2 cardSize"><strong>Contact Number</strong>: { reservation.mobile_number }</p>
-                <p className="py-2 cardSize" data-reservation-id-status={reservation.reservation_id}><strong>Status</strong>: { reservation.status && reservation.status.toUpperCase() }</p>
+                <p className="py-2 cardSize">Date: { formatAsDate(reservation.reservation_date) }</p>
+                <p className="py-2 cardSize">Time: { formatAsTime(reservation.reservation_time) }</p>
+                <p className="py-2 cardSize">Contact Number: { reservation.mobile_number }</p>
+                <p className="py-2 cardSize" data-reservation-id-status={reservation.reservation_id}>Status: { reservation.status && reservation.status.toUpperCase() }</p>
               </div>
               <div className="col mb-3">
                 { reservation.status === "booked"
