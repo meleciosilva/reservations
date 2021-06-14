@@ -13,13 +13,13 @@ function ListTables({ tables, handleFreeTableAndFinishReservation }) {
             <div key={index} className="col-6 col-md-3 col-xxl-4">
               <div className="card lightBackground darkBorder mb-2">
                 <div className="card-body text-center pt-3 pb-2">
-                  <h5 className="darkText py-2">{table.table_name}</h5>
-                  <h5
-                    className="darkText"
+                  <p className="darkText py-2 size22px">{table.table_name}</p>
+                  <p
+                    className="darkText size22px"
                     data-table-id-status={table.table_id}
                   >
                     {!table.reservation_id ? "Free" : "Occupied"}
-                  </h5>
+                  </p>
                   {table.reservation_id && (
                     <div className="d-flex justify-content-center pt-2">
                       <button
