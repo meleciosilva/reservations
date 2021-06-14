@@ -68,6 +68,7 @@ function Routes() {
     if (confirmed) {
       cancelReservation(reservationId)
         .then(() => setIsSubmit(!isSubmit))
+        .then(() => listReservations({ date }))
         .catch(setErrors)
     }
   }
@@ -109,8 +110,8 @@ function Routes() {
           table.reservation_id = null;
           return prevState;
         }))
-        .then(() => fetchTables())
         .then(() => setIsSubmit(!isSubmit))
+        .then(() => fetchTables())
         .then(() => history.push(`/dashboard?date=${date}`))
         .catch(setErrors)
     }
