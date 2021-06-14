@@ -1,27 +1,17 @@
 
 # Restaurant Reservations System
 
-## Summary
+## Description
 
-Restaurant Reservations System is a platform designed for fine dining restaurants. The software is used only by restaurant personnel when a customer calls to request a reservation.
-
-In addition to making reservations, this application helps streamline reservation management in the following ways:
-
-- update & cancel existing reservations
-- seat reservations at specific tables upon arrival
-- finish reservations and mark table availability
-- easily search reservations by phone number
-- provide an overview of free and occupied tables
+Restaurant Reservations System is a platform designed for fine dining restaurants. The software is used only by restaurant personnel when a customer calls to request a reservation or change a reservation and arrives at the restaurant to be seated.
 
 ## Demo
 
-[Restaurant Reservations](https://restaurant-reservation-frontend-gilt.vercel.app/dashboard?date=2020-12-30)
+[Restaurant Reservations](https://restaurant-reservation-frontend-gilt.vercel.app/)
 
 ## API Reference
 
-### Reservations
-
-#### Get all reservations
+### Get all reservations
 
 ```http
   GET /reservations
@@ -52,13 +42,13 @@ The response from the server should look like the following:
   GET /reservations/?date=YYYY-MM-DD
 ```
 
-#### Get all reservations (by reservation date)
+### Get all reservations (by reservation date)
 
 In the event where `date=YYYY-MM-DD` is provided, the route should return _only_ reservations for the date entered.
 
 The response from the server should look identical to the response above _except_ that it may exclude some records.
 
-#### Get all reservations (by mobile number)
+### Get all reservations (by mobile number)
 
 ```http
   GET /reservations/?mobile_number=###-###-####
@@ -68,7 +58,7 @@ In the event where `mobile_number=###-###-####` is provided, the route should re
 
 The response from the server should look identical to the response above _except_ that it may exclude some records.
 
-#### Create a reservation
+### Create a reservation
 
 ```http
   POST /reservations
@@ -108,7 +98,7 @@ The response from the server should look like the following:
 }
 ```
 
-#### Read one reservation
+### Read one reservation
 
 ```http
   GET /reservations/:reservationId
@@ -116,7 +106,7 @@ The response from the server should look like the following:
 
 The response from the server should look identical to the response above.
 
-#### Update one reservation
+### Update one reservation
 
 ```http
   PUT /reservations/:reservationId
@@ -156,7 +146,7 @@ The response from the server should look like the following:
 }
 ```
 
-#### Delete one reservation
+### Delete one reservation
 
 ```http
   DELETE /reservations/:reservationId
@@ -164,7 +154,7 @@ The response from the server should look like the following:
 
 The response from the server should have no content.
 
-#### Update the reservation status
+### Update the reservation status
 
 ```http
   PUT /reservations/:reservationId/status
@@ -190,9 +180,7 @@ The response from the server should look like the following:
 }
 ```
 
-### Tables
-
-#### Get all tables
+### Get all tables
 
 ```http
   GET /tables
@@ -216,7 +204,7 @@ The response from the server should look like the following:
 }
 ```
 
-#### Create a table
+### Create a table
 
 ```http
   POST /tables
@@ -248,7 +236,7 @@ The response from the server should look like the following:
 }
 ```
 
-#### Read one table
+### Read one table
 
 ```http
   GET /tables/:tableId
@@ -256,7 +244,7 @@ The response from the server should look like the following:
 
 The response from the server should look identical to the response above.
 
-#### Update one table (seat reservation)
+### Update one table (seat reservation)
 
 ```http
   PUT /tables/:tableId/seat
@@ -291,7 +279,7 @@ The response from the server should look like the following:
 }
 ```
 
-#### Delete one table (finish reservation)
+### Delete one table (finish reservation)
 
 ```http
   DELETE /tables/:tableId/seat
@@ -306,6 +294,20 @@ The response from the server should look like the following:
   }
 }
 ```
+
+## Summary
+
+This Restaurant Reservations System application helps streamline reservation management in the following ways:
+
+- make new reservations to better plan for daily customer occupancy and required staffing
+- allow personnel to only create reservations during specified week days and/or hours of operation
+- update & cancel existing reservations
+- seat reservations at specific tables upon arrival to help with serving and wait time estimates
+- finish reservations and mark tables as open for next available guests
+- search reservations by phone number for efficient reservation management
+- easily navigate daily reservations and reservation status (booked, seated, finished, cancelled) to help with operations
+- make new tables in the event of restaurant expansion
+- provide an overview of free and occupied tables
 
 ## Screenshots
 
@@ -351,7 +353,7 @@ Set up four new [ElephantSQL](https://www.elephantsql.com/) database instances -
 
 1. Fork and clone this repository.
 2. Run `cp ./back-end/.env.sample ./back-end/.env`.
-3. Update the `./back-end/.env` file with the connection URL's to your ElephantSQL database instance.
+3. Update the `./back-end/.env` file with the connection URLs to your ElephantSQL database instance.
 4. Run `cp ./front-end/.env.sample ./front-end/.env`.
 5. You should not need to make changes to the `./front-end/.env` file unless you want to connect to a backend at a location other than `http://localhost:5000`.
 6. Run `npm install` to install project dependencies.
