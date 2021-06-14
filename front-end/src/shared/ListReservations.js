@@ -47,8 +47,7 @@ function ListReservations({ reservations, handleCancelReservation }) {
                   className="py-2 cardSize"
                   data-reservation-id-status={reservation.reservation_id}
                 >
-                  Status:{" "}
-                  {reservation.status && reservation.status.toUpperCase()}
+                  Status: {reservation.status && reservation.status.toUpperCase()}
                 </p>
               </div>
               <div className="col mb-3">
