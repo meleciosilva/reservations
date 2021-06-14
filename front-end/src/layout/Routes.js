@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
-import { listReservations, fetchTables, deleteTable, cancelReservation, seatReservation } from "../utils/api";
+import { listReservations, fetchTables, deleteTable, cancelReservation, seatReservation, createTable } from "../utils/api";
 import { today } from "../utils/date-time";
 import useQuery from "./../utils/useQuery";
 
@@ -44,7 +44,10 @@ function Routes() {
   }
 
   function handleNewTable(newTable) {
-    setTables(prevState => [...prevState, newTable]);
+    createTable(newTable)
+      .then(() => setTables(prevState => [...prevState, newTable]))
+      .then(() => history.push("/dashboard"))
+      .catch((err) => setErrors([err]))
   }
 
   function handleNewReservation(newReservation) {
@@ -85,7 +88,7 @@ function Routes() {
       }))
       .then(() => setIsSubmit(!isSubmit))
       .then(() => history.push(`/dashboard?date=${date}`))
-      .catch(setErrors);
+      .catch((err) => setErrors([err]));
   }
 
   // removes reservation_id from table and updates reservation status to "finished"
@@ -120,9 +123,9 @@ function Routes() {
       </Route>
       <Route path="/dashboard">
         <Dashboard 
+          errors={errors} 
           date={date} 
           handleDate={handleDate}
-          errors={errors} 
           reservations={reservations}
           tables={tables} 
           handleFreeTableAndFinishReservation={handleFreeTableAndFinishReservation}
@@ -131,6 +134,7 @@ function Routes() {
       </Route>
       <Route path="/reservations">
         <Reservations 
+          errors={errors}
           tables={tables}
           handleUpdateTableAndReservation={handleUpdateTableAndReservation}
           handleNewReservation={handleNewReservation}
@@ -138,7 +142,10 @@ function Routes() {
         />
       </Route>
       <Route path="/tables">
-        <Tables handleNewTable={handleNewTable} />
+        <Tables 
+          errors={errors}
+          handleNewTable={handleNewTable} 
+        />
       </Route>
       <Route path="/search">
         <Search />
