@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Lora&family=Roboto:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Roboto:wght@700&display=swap");
 
 /* colors */
 
@@ -16,7 +16,7 @@ html,
 }
 
 .accentBackground2 {
-  background-color: #6f767f;
+  background-color: #4A5355;
 }
 
 .lightBackground {
@@ -53,12 +53,29 @@ body {
   font-family: "Lora", serif;
 }
 
-.cardSize {
+.bold {
+  font-weight: 700;
+}
+
+.size20px {
   font-size: 20px;
 }
 
+.size22px {
+  font-size: 22px;
+}
+
+
 nav.navbar a > h1 {
   font-size: 46px;
+}
+
+::placeholder {
+  font-size: 18px;
+}
+
+button.btn, a.btn {
+  font-size: 18px;
 }
 
 /* general styles */
