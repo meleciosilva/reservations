@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { createTable } from "../utils/api";
 
 function NewTable({ handleNewTable }) {
   const history = useHistory();
