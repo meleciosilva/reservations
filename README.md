@@ -309,7 +309,37 @@ The response from the server should look like the following:
 
 ## Screenshots
 
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+### Dashboard
+
+![Dashboard](./front-end/images/dashboard.png)
+
+### Search
+
+![Search](./front-end/images/search.png)
+
+### New Table
+
+![New Table](./front-end/images/newTable.png)
+
+### New Reservation
+
+![New Reservation](./front-end/images/newReservation.png)
+
+### Edit Reservation
+
+![Edit Reservation](./front-end/images/editReservation.png)
+
+### Seat Reservation
+
+![Seat Reservation](./front-end/images/seat.png)
+
+### Dashboard after Seating Reservation
+
+![Dashboard after Seating Reservation](./front-end/images/seatAfter.png)
+
+### Dashboard after Finishing Reservation
+
+![Dashboard after Finishing Reservation](./front-end/images/finish.png)
 
 ## Installation
 
