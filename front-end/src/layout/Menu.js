@@ -6,16 +6,28 @@ function Menu() {
   return (
     <nav className="navbar navbar-dark navbar-expand-lg darkBackground">
       <div className="container-fluid" id="navBar">
-        <Link className="navbar-brand" to="/dashboard"> 
+        <Link className="navbar-brand" to="/dashboard">
           <h1 className="menu">Periodic Tables</h1>
         </Link>
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarText"
+          aria-controls="navbarText"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarText">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item px-3">
-              <Link className="nav-link active" aria-current="page" to="/dashboard">
+              <Link
+                className="nav-link active"
+                aria-current="page"
+                to="/dashboard"
+              >
                 <span className="oi oi-dashboard pr-2" />
                 <span className="menu">Dashboard</span>
               </Link>

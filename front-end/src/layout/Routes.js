@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
-import { listReservations, fetchTables, deleteTable, cancelReservation, seatReservation, createTable } from "../utils/api";
+import {
+  listReservations,
+  fetchTables,
+  deleteTable,
+  cancelReservation,
+  seatReservation,
+  createTable,
+} from "../utils/api";
 import { today } from "../utils/date-time";
 import useQuery from "./../utils/useQuery";
 
@@ -13,7 +20,6 @@ import Search from "../search/Search";
 import NotFound from "./NotFound";
 
 function Routes() {
-  
   const query = useQuery();
   const history = useHistory();
 
@@ -45,48 +51,61 @@ function Routes() {
 
   function handleNewTable(newTable) {
     createTable(newTable)
-      .then(() => setTables(prevState => [...prevState, newTable]))
+      .then(() => setTables((prevState) => [...prevState, newTable]))
       .then(() => history.push("/dashboard"))
-      .catch((err) => setErrors([err]))
+      .catch((err) => setErrors([err]));
   }
 
   function handleNewReservation(newReservation) {
     setDate(newReservation.reservation_date);
-    setReservations(prevState => ([...prevState, newReservation]));
+    setReservations((prevState) => [...prevState, newReservation]);
   }
 
   function handleUpdateReservation(updatedReservation) {
     setDate(updatedReservation.reservation_date);
-    const index = reservations.find(reservation => Number(reservation.reservation_id) === Number(updatedReservation.reservation_id));
-    setReservations(prevState => {
-      prevState.splice(index, 1, updatedReservation)
+    const index = reservations.find(
+      (reservation) =>
+        Number(reservation.reservation_id) ===
+        Number(updatedReservation.reservation_id)
+    );
+    setReservations((prevState) => {
+      prevState.splice(index, 1, updatedReservation);
     });
   }
 
   function handleCancelReservation(reservationId) {
-    const confirmed = window.confirm("Do you want to cancel this reservation? This cannot be undone.");
+    const confirmed = window.confirm(
+      "Do you want to cancel this reservation? This cannot be undone."
+    );
     if (confirmed) {
       cancelReservation(reservationId)
         .then(() => setIsSubmit(!isSubmit))
         .then(() => listReservations({ date }))
-        .catch(setErrors)
+        .catch(setErrors);
     }
   }
 
   // adds reservation_id to selected table and updates reservation status to "booked"
   function handleUpdateTableAndReservation(reservationId, tableId) {
-    const table = tables.find(table => Number(table.table_id) === Number(tableId));
+    const table = tables.find(
+      (table) => Number(table.table_id) === Number(tableId)
+    );
     const tableIndex = tables.indexOf(table);
-    
+
     seatReservation(reservationId, tableId)
       .then((updatedReservation) => {
-        const updatedTable = { ...table, reservation_id: updatedReservation.reservation_id };
+        const updatedTable = {
+          ...table,
+          reservation_id: updatedReservation.reservation_id,
+        };
         return updatedTable;
       })
-      .then((updatedTable) => setTables(prevState => {
-        prevState.splice(tableIndex, 1, updatedTable);
-        return prevState;
-      }))
+      .then((updatedTable) =>
+        setTables((prevState) => {
+          prevState.splice(tableIndex, 1, updatedTable);
+          return prevState;
+        })
+      )
       .then(() => setIsSubmit(!isSubmit))
       .then(() => history.push(`/dashboard?date=${date}`))
       .catch((err) => setErrors([err]));
@@ -94,26 +113,36 @@ function Routes() {
 
   // removes reservation_id from table and updates reservation status to "finished"
   function handleFreeTableAndFinishReservation(tableId) {
-    const confirmed = window.confirm("Is this table ready to seat new guests? This cannot be undone.");
+    const confirmed = window.confirm(
+      "Is this table ready to seat new guests? This cannot be undone."
+    );
     if (confirmed) {
       deleteTable(tableId)
         .then(() => {
-          const table = tables.find(table => Number(table.table_id) === Number(tableId));
-          const reservationIndex = reservations.findIndex(res => Number(res.reservation_id) === Number(table.reservation_id));
-          setReservations(prevState => {
+          const table = tables.find(
+            (table) => Number(table.table_id) === Number(tableId)
+          );
+          const reservationIndex = reservations.findIndex(
+            (res) => Number(res.reservation_id) === Number(table.reservation_id)
+          );
+          setReservations((prevState) => {
             prevState.splice(reservationIndex, 1);
             return prevState;
-          })
+          });
         })
-        .then(() => setTables(prevState => {
-          const table = prevState.find(table => Number(table.table_id) === Number(tableId));
-          table.reservation_id = null;
-          return prevState;
-        }))
+        .then(() =>
+          setTables((prevState) => {
+            const table = prevState.find(
+              (table) => Number(table.table_id) === Number(tableId)
+            );
+            table.reservation_id = null;
+            return prevState;
+          })
+        )
         .then(() => setIsSubmit(!isSubmit))
         .then(() => fetchTables())
         .then(() => history.push(`/dashboard?date=${date}`))
-        .catch(setErrors)
+        .catch(setErrors);
     }
   }
 
@@ -123,18 +152,20 @@ function Routes() {
         <Redirect to={"/dashboard"} />
       </Route>
       <Route path="/dashboard">
-        <Dashboard 
-          errors={errors} 
-          date={date} 
+        <Dashboard
+          errors={errors}
+          date={date}
           handleDate={handleDate}
           reservations={reservations}
-          tables={tables} 
-          handleFreeTableAndFinishReservation={handleFreeTableAndFinishReservation}
+          tables={tables}
+          handleFreeTableAndFinishReservation={
+            handleFreeTableAndFinishReservation
+          }
           handleCancelReservation={handleCancelReservation}
         />
       </Route>
       <Route path="/reservations">
-        <Reservations 
+        <Reservations
           errors={errors}
           tables={tables}
           handleUpdateTableAndReservation={handleUpdateTableAndReservation}
@@ -143,10 +174,7 @@ function Routes() {
         />
       </Route>
       <Route path="/tables">
-        <Tables 
-          errors={errors}
-          handleNewTable={handleNewTable} 
-        />
+        <Tables errors={errors} handleNewTable={handleNewTable} />
       </Route>
       <Route path="/search">
         <Search />

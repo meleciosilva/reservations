@@ -1,7 +1,10 @@
 const tablesService = require("./tables.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
-const {   createTableValidation, seatReservationValidation } = require("./tables.schemas");
-const { validate } = require('express-validation');
+const {
+  createTableValidation,
+  seatReservationValidation,
+} = require("./tables.schemas");
+const { validate } = require("express-validation");
 
 // Table Validation Middleware
 
@@ -10,7 +13,7 @@ async function tableExists(req, res, next) {
   if (!table) {
     return next({
       status: 404,
-      message: `Table id ${req.params.tableId} cannot be found`
+      message: `Table id ${req.params.tableId} cannot be found`,
     });
   }
   res.locals.table = table;
@@ -22,7 +25,7 @@ function isTableOccupied(req, res, next) {
   if (!table.reservation_id) {
     return next({
       status: 400,
-      message: `'${table.table_name}' is not occupied`
+      message: `'${table.table_name}' is not occupied`,
     });
   }
   next();
@@ -31,11 +34,13 @@ function isTableOccupied(req, res, next) {
 // Reservation Validation Middleware
 
 async function reservationExists(req, res, next) {
-  const reservation = await tablesService.readReservation(req.body.data.reservation_id);
+  const reservation = await tablesService.readReservation(
+    req.body.data.reservation_id
+  );
   if (!reservation) {
     return next({
       status: 404,
-      message: `Reservation id ${req.body.data.reservation_id} cannot be found`
+      message: `Reservation id ${req.body.data.reservation_id} cannot be found`,
     });
   }
   res.locals.reservation = reservation;
@@ -49,19 +54,19 @@ function reservationCanBeSeated(req, res, next) {
   if (reservation.status === "seated") {
     return next({
       status: 400,
-      message: `Reservation id ${reservation.reservation_id} has already been seated`
+      message: `Reservation id ${reservation.reservation_id} has already been seated`,
     });
   }
   if (table.reservation_id) {
     return next({
       status: 400,
-      message: `'${table.table_name}' is already occupied. Select another table.`
+      message: `'${table.table_name}' is already occupied. Select another table.`,
     });
   }
   if (reservation.people > table.capacity) {
     return next({
       status: 400,
-      message: `'${table.table_name}' does not have sufficient capacity to seat ${reservation.people} people.`
+      message: `'${table.table_name}' does not have sufficient capacity to seat ${reservation.people} people.`,
     });
   }
 
@@ -91,37 +96,38 @@ function updateTableAndReservationStatus(req, res, next) {
   const { reservation_id } = req.body.data;
   const updatedTable = {
     ...res.locals.table,
-    reservation_id, 
-    table_id: res.locals.table.table_id
-  }
+    reservation_id,
+    table_id: res.locals.table.table_id,
+  };
 
   const originalReservation = res.locals.reservation;
   const updatedReservation = {
     ...originalReservation,
     status: "seated",
-    reservation_id: originalReservation.reservation_id
-  }
+    reservation_id: originalReservation.reservation_id,
+  };
 
-  return tablesService.updateTableAndReservationStatus(updatedTable, updatedReservation)
+  return tablesService
+    .updateTableAndReservationStatus(updatedTable, updatedReservation)
     .then((data) => res.json({ data }))
     .catch(next);
 }
 
 function deleteTableAndUpdateReservation(req, res, next) {
   const reservationId = res.locals.table.reservation_id;
-  res.locals.table.reservation_id = null;  // removes reservation_id from table 
+  res.locals.table.reservation_id = null; // removes reservation_id from table
 
-  return tablesService.deleteTableAndUpdateReservation(res.locals.table, reservationId)
-    .then(() => res.json({ data: { message: "Reservation Successfully Finished" } }))
+  return tablesService
+    .deleteTableAndUpdateReservation(res.locals.table, reservationId)
+    .then(() =>
+      res.json({ data: { message: "Reservation Successfully Finished" } })
+    )
     .catch(next);
 }
 
 module.exports = {
   list: asyncErrorBoundary(list),
-  read: [
-    asyncErrorBoundary(tableExists),
-    read,
-  ],
+  read: [asyncErrorBoundary(tableExists), read],
   create: [
     validate(createTableValidation, { keyByField: true }, {}),
     asyncErrorBoundary(create),
@@ -138,4 +144,4 @@ module.exports = {
     isTableOccupied,
     deleteTableAndUpdateReservation,
   ],
-}
+};

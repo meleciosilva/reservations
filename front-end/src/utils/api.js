@@ -70,7 +70,7 @@ async function listReservations(params, signal) {
  * Creates a new reservation
  * @returns {Promise<[reservation]>}
  *  a promise that resolves to the newly created reservation.
-*/
+ */
 
 async function createReservation(reservation, signal) {
   const url = `${API_BASE_URL}/reservations`;
@@ -87,7 +87,7 @@ async function createReservation(reservation, signal) {
  * Edits an existing reservation
  * @returns {Promise<[reservation]>}
  *  a promise that resolves to an updated reservation.
-*/
+ */
 
 async function editReservation(reservationId, reservation, signal) {
   const url = `${API_BASE_URL}/reservations/${reservationId}`;
@@ -120,7 +120,7 @@ async function createTable(table, signal) {
  * Updates an existing table and reservation
  * @returns {Promise<[reservation]>}
  *  a promise that resolves to an updated reservation.
-*/
+ */
 
 async function seatReservation(reservation_id, table_id) {
   const url = `${API_BASE_URL}/tables/${table_id}/seat`;
@@ -136,7 +136,7 @@ async function seatReservation(reservation_id, table_id) {
  * Updates an existing reservation
  * @returns {Promise<[status]>}
  *  a promise that resolves to an updated reservation status.
-*/
+ */
 
 async function cancelReservation(reservation_id) {
   const url = `${API_BASE_URL}/reservations/${reservation_id}/status`;
@@ -163,14 +163,14 @@ async function fetchTables(signal) {
  * Deletes an existing table and creates a new table without a reservation_id
  * @returns {Promise<[message]>}
  *  a promise that resolves to a successful deletion message.
-*/
+ */
 
 async function deleteTable(tableId, signal) {
   const url = new URL(`${API_BASE_URL}/tables/${tableId}/seat`);
-  const options = { 
+  const options = {
     method: "DELETE",
     headers,
-    signal
+    signal,
   };
   return await fetchJson(url, options);
 }

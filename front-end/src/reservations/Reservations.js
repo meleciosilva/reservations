@@ -4,15 +4,21 @@ import Seat from "./Seat";
 import ReservationForm from "./ReservationForm";
 
 function Reservations(props) {
-  const { tables, handleUpdateTableAndReservation, handleUpdateReservation, handleNewReservation, errors } = props;
+  const {
+    tables,
+    handleUpdateTableAndReservation,
+    handleUpdateReservation,
+    handleNewReservation,
+    errors,
+  } = props;
   return (
     <Switch>
       <Route exact={true} path="/reservations">
         <Redirect to="/dashboard" />
       </Route>
       <Route path="/reservations/:reservation_id/seat">
-        <Seat 
-          tables={tables} 
+        <Seat
+          tables={tables}
           handleUpdateTableAndReservation={handleUpdateTableAndReservation}
           errors={errors}
         />
@@ -24,7 +30,7 @@ function Reservations(props) {
         />
       </Route>
     </Switch>
-  )
+  );
 }
 
 export default Reservations;

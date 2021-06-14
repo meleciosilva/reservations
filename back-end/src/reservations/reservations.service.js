@@ -26,13 +26,11 @@ function update(updatedReservation) {
     .where({ "r.reservation_id": updatedReservation.reservation_id })
     .update(updatedReservation)
     .returning("*")
-    .then(updatedRecords => updatedRecords[0]);
-  }
+    .then((updatedRecords) => updatedRecords[0]);
+}
 
 function destroy(reservation_id) {
-  return knex("reservations as r")
-    .where({ reservation_id })
-    .del();
+  return knex("reservations as r").where({ reservation_id }).del();
 }
 
 function search(mobile_number) {
@@ -51,4 +49,4 @@ module.exports = {
   update,
   destroy,
   search,
-}
+};

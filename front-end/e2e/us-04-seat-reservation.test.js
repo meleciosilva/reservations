@@ -1,5 +1,5 @@
 const puppeteer = require("puppeteer");
-const { setDefaultOptions } = require('expect-puppeteer');
+const { setDefaultOptions } = require("expect-puppeteer");
 const fs = require("fs");
 const fsPromises = fs.promises;
 
@@ -212,9 +212,7 @@ describe("US-04 - Seat reservation - E2E", () => {
         fullPage: true,
       });
 
-      await Promise.all([
-        page.click("[type=submit]"),
-      ]);
+      await Promise.all([page.click("[type=submit]")]);
 
       await page.screenshot({
         path: ".screenshots/us-04-seat-capacity-reservation-submit-after.png",

@@ -1,54 +1,56 @@
-@import url('https://fonts.googleapis.com/css2?family=Lora&family=Roboto:wght@700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Lora&family=Roboto:wght@700&display=swap");
 
 /* colors */
 
-html, #root {
-  background-color: #F1F3F2;
+html,
+#root {
+  background-color: #f1f3f2;
 }
 
 .darkBackground {
-  background-color: #32374B;
+  background-color: #32374b;
 }
 
 .accentBackground {
-  background-color:rgb(31, 33, 43);
+  background-color: rgb(31, 33, 43);
 }
 
 .accentBackground2 {
-  background-color: #6F767F;
+  background-color: #6f767f;
 }
 
 .lightBackground {
-  background-color: #F1F3F2;
+  background-color: #f1f3f2;
 }
 
 .lightText {
-  color: #F1F3F2;
+  color: #f1f3f2;
 }
 
 .darkText {
-  color: #32374B;
+  color: #32374b;
 }
 
 .darkBorder {
-  border: 3px #32374B;
+  border: 3px #32374b;
   border-radius: 6px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
 }
 
 /* typography */
 
-nav.navbar a > h1, nav.navbar span.menu {
-  font-family: 'Roboto', sans-serif;
+nav.navbar a > h1,
+nav.navbar span.menu {
+  font-family: "Roboto", sans-serif;
 }
 
 nav.navbar a span {
-  color: #F1F3F2;
+  color: #f1f3f2;
   font-size: 18px;
 }
 
 body {
-  font-family: 'Lora', serif;
+  font-family: "Lora", serif;
 }
 
 .cardSize {
@@ -61,10 +63,11 @@ nav.navbar a > h1 {
 
 /* general styles */
 
-button.btn:hover, a.btn:hover {
+button.btn:hover,
+a.btn:hover {
   background-color: none;
-  color: #F1F3F2;
-  transform: scale(.99);
+  color: #f1f3f2;
+  transform: scale(0.99);
 }
 
 #navBar {

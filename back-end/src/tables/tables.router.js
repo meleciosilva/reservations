@@ -8,10 +8,7 @@ router
   .delete(controller.delete)
   .all(methodNotAllowed);
 
-router
-  .route("/:tableId")
-  .get(controller.read)
-  .all(methodNotAllowed);
+router.route("/:tableId").get(controller.read).all(methodNotAllowed);
 
 router
   .route("/")
