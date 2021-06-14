@@ -81,6 +81,7 @@ function Routes() {
       cancelReservation(reservationId)
         .then(() => setIsSubmit(!isSubmit))
         .then(() => listReservations({ date }))
+        .then(() => history.push(`/dashboard?date=${date}`))
         .catch(setErrors);
     }
   }
