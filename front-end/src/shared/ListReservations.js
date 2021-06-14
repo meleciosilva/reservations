@@ -25,29 +25,33 @@ function ListReservations({ reservations, handleCancelReservation }) {
         {validReservations.map((reservation, index) => (
           <div className="col-xs-12 col-sm-6 col-md-4" key={index}>
             <div className="card mb-3 darkBorder">
-              <div className="card-header d-flex justify-content-between darkBorder darkBackground lightText pt-3">
-                <h4 className="font-weight-bold">
+              <div className="card-header d-flex justify-content-between darkBackground lightText pt-3">
+                <p className="size22px">
                   {reservation.first_name} {reservation.last_name}
-                </h4>
-                <h4 className="font-weight-bold">
+                </p>
+                <p className="size22px">
                   Party: {reservation.people}
-                </h4>
+                </p>
               </div>
               <div className="card-body">
-                <p className="py-2 cardSize">
-                  Date: {formatAsDate(reservation.reservation_date)}
+                <p className="py-2 size20px">
+                <span className="bold">Date: </span>
+                  {formatAsDate(reservation.reservation_date)}
                 </p>
-                <p className="py-2 cardSize">
-                  Time: {formatAsTime(reservation.reservation_time)}
+                <p className="py-2 size20px">
+                <span className="bold">Time: </span>
+                  {formatAsTime(reservation.reservation_time)}
                 </p>
-                <p className="py-2 cardSize">
-                  Contact Number: {reservation.mobile_number}
+                <p className="py-2 size20px">
+                  <span className="bold">Contact Number: </span>
+                  {reservation.mobile_number}
                 </p>
                 <p
-                  className="py-2 cardSize"
+                  className="py-2 size20px"
                   data-reservation-id-status={reservation.reservation_id}
                 >
-                  Status: {reservation.status && reservation.status.toUpperCase()}
+                  <span className="bold">Status: </span>
+                  {reservation.status && reservation.status.toUpperCase()}
                 </p>
               </div>
               <div className="col mb-3">
