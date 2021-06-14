@@ -84,7 +84,7 @@ async function create(req, res) {
 async function update(req, res) {
   const originalReservation = res.locals.reservation;
   const newReservation = {
-    ...originalReservation, // added to supplement PUT requests made to update status due to minimal request body
+    ...originalReservation, // added to supplement PUT requests to "/reservations/reservationId/status" due to minimal request body
     ...req.body.data,
     reservation_id: originalReservation.reservation_id
   }

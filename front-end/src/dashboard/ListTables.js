@@ -4,22 +4,26 @@ function ListTables({ tables, handleFreeTableAndFinishReservation }) {
   const sortedTables = tables.sort((a, b) => a.table_name.localeCompare(b.table_name));
   return (
     <div>
-      <h2>Tables</h2>
+      <div className="py-3">
+        <h2>Tables</h2>
 
-      <div className="row">
-        { sortedTables.map((table, index) => (
-          <div key={index} className="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-            <div className="card mb-2">
-              <div className="card-body">
-                <h5 className="card-title">{ table.table_name }</h5>
-                <p className="card-text font-weight-bold" data-table-id-status={table.table_id} >{ !table.reservation_id ? "Free" : "Occupied" }</p>
-                { table.reservation_id && 
-                  <button type="button" className="btn btn-danger" data-table-id-finish={table.table_id} onClick={() => handleFreeTableAndFinishReservation(table.table_id)}>Finish</button> 
-                }
+        <div className="row">
+          { sortedTables.map((table, index) => (
+            <div key={index} className="col-6 col-md-3 col-xxl-4">
+              <div className="card lightBackground darkBorder mb-2">
+                <div className="card-body text-center pt-3 pb-2">
+                  <h5 className="darkText py-2">{ table.table_name }</h5>
+                  <h5 className="darkText" data-table-id-status={table.table_id} >{ !table.reservation_id ? "Free" : "Occupied" }</h5>
+                  { table.reservation_id &&
+                    <div className="d-flex justify-content-center pt-2">
+                      <button type="button" className="btn accentBackground lightText w-100 text-center" data-table-id-finish={table.table_id} onClick={() => handleFreeTableAndFinishReservation(table.table_id)}>Finish</button> 
+                    </div>
+                  }
+                </div>
               </div>
             </div>
-          </div>
-        )) }
+          )) }
+        </div>
       </div>
       <hr />
     </div>

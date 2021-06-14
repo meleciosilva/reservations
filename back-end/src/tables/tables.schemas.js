@@ -21,8 +21,9 @@ const seatReservationValidation = {
   body: Joi.object({
     data: Joi.object({
       reservation_id: Joi.number()
-        .min(1)
-        .required(),
+      .strict()
+      .min(1)
+      .required(),
     })
   })
 }

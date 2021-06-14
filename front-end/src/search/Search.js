@@ -19,7 +19,7 @@ function Search() {
     setErrors(null);
     listReservationsByNumber(number, abortController.signal)
       .then(setReservations)
-      .catch(setErrors);
+      .catch((err) => setErrors([err]));
     return () => abortController.abort();
   }
 
@@ -33,8 +33,8 @@ function Search() {
     if (confirmed) {
       cancelReservation(reservationId)
         .then(() => setIsCancelled(!isCancelled))
-        .catch(setErrors)
-    }
+        .catch((err) => setErrors([err]));
+      }
   }
 
   return(

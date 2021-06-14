@@ -5,7 +5,7 @@ function ErrorAlert({ errors }) {
     errors && (
       <div className="alert alert-danger m-2">
         { errors.map((err, index) => (
-            <div key={index} className="my-1" >Error: { err.message }</div>
+            <div key={index} className="my-1" >{ err.message }</div>
           ))
         }
       </div>

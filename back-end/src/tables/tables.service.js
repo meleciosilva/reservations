@@ -24,7 +24,9 @@ function update(updatedTable) {
   return knex("tables as t")
     .select("*")  
     .where({ "t.table_id": updatedTable.table_id })
-    .update(updatedTable, "*");
+    .update(updatedTable)
+    .returning("*")
+    .then(updatedRecords => updatedRecords[0]);
 }
 
 function destroy(tableId) {
@@ -74,7 +76,9 @@ function updateTableAndReservationStatus(updatedTable, updatedReservation) {
         return knex("reservations as r")
           .select("*")  
           .where({ "r.reservation_id": updatedReservation.reservation_id })
-          .update(updatedReservation, "*");
+          .update(updatedReservation)
+          .returning("*")
+          .then((updatedRecords) => updatedRecords[0]);
       });
     });
 }

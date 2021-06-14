@@ -87,7 +87,6 @@ function ReservationForm({ handleNewReservation, handleUpdateReservation }) {
 
   const handleEdit = (e) => {
     e.preventDefault();
-    console.log(reservation_id, state)
     editReservation(reservation_id, state)
       .then(() => handleUpdateReservation(state))
       .then(() => history.push("/dashboard"))
@@ -119,17 +118,17 @@ function ReservationForm({ handleNewReservation, handleUpdateReservation }) {
         </div>
         <div className="col-md-6">
           <label htmlFor="reservation_date" className="form-label">Date</label>
-          <input name="reservation_date" type="date" className="form-control" id="reservation_date" placeholder="YYYY-MM-DD" aria-describedby="reservation_date_help" required value={state.reservation_date} onChange={handleChange}/>
+          <input name="reservation_date" type="date" className="form-control" id="reservation_date" aria-describedby="reservation_date_help" required value={state.reservation_date} onChange={handleChange}/>
           <div id="reservation_date_help" className="form-text">Closed on Tuesday</div>
         </div>
         <div className="col-md-6">
           <label htmlFor="reservation_time" className="form-label">Time</label>
-          <input name="reservation_time" type="time" className="form-control" id="reservation_time" placeholder="HH:MM" aria-describedby="reservation_time_help" value={state.reservation_time} onChange={handleChange}/>
-          <div id="reservation_time_help" className="form-text">Hours 10:30am - 10:30pm | <strong>Last reservation at 9:30pm</strong></div>
+          <input name="reservation_time" type="time" className="form-control" id="reservation_time" aria-describedby="reservation_time_help" value={state.reservation_time} onChange={handleChange}/>
+          <div id="reservation_time_help" className="form-text">Hours 10:30am - 10:30pm | Last reservation at 9:30pm</div>
         </div>
-        <div className="col-md-12">
-          <button type="button" className="btn btn-secondary mr-2" onClick={ () => history.goBack() }>Cancel</button>
-          <button type="submit" className="btn btn-primary">Submit</button>
+        <div className="btn-group d-flex pb-4" role="group" aria-label="buttons">
+          <button type="button" className="btn btn accentBackground2 lightText mr-2" onClick={ () => history.goBack() }>Cancel</button>
+          <button type="submit" className="btn btn darkBackground lightText">Submit</button>
         </div>
       </form>
       

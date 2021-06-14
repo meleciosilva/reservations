@@ -1,4 +1,72 @@
-.side-bar {
-  background-color: #393a44;
-  min-width: 200px;
+@import url('https://fonts.googleapis.com/css2?family=Lora&family=Roboto:wght@700&display=swap');
+
+/* colors */
+
+html, #root {
+  background-color: #F1F3F2;
+}
+
+.darkBackground {
+  background-color: #32374B;
+}
+
+.accentBackground {
+  background-color:rgb(31, 33, 43);
+}
+
+.accentBackground2 {
+  background-color: #6F767F;
+}
+
+.lightBackground {
+  background-color: #F1F3F2;
+}
+
+.lightText {
+  color: #F1F3F2;
+}
+
+.darkText {
+  color: #32374B;
+}
+
+.darkBorder {
+  border: 3px #32374B;
+  border-radius: 6px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+}
+
+/* typography */
+
+nav.navbar a > h1, nav.navbar span.menu {
+  font-family: 'Roboto', sans-serif;
+}
+
+nav.navbar a span {
+  color: #F1F3F2;
+  font-size: 18px;
+}
+
+body {
+  font-family: 'Lora', serif;
+}
+
+.cardSize {
+  font-size: 20px;
+}
+
+nav.navbar a > h1 {
+  font-size: 46px;
+}
+
+/* general styles */
+
+button.btn:hover, a.btn:hover {
+  background-color: none;
+  color: #F1F3F2;
+  transform: scale(.99);
+}
+
+#navBar {
+  padding: 0 10px;
 }
