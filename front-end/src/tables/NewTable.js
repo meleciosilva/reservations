@@ -25,9 +25,7 @@ function NewTable({ handleNewTable }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    createTable(state);
     handleNewTable(state);
-    history.push("/dashboard");
   }
 
   return (
