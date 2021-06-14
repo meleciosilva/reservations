@@ -1,3 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora&family=Roboto:wght@700&display=swap');
+
+/* colors */
+
 html, #root {
   background-color: #F1F3F2;
 }
@@ -27,17 +31,35 @@ html, #root {
 }
 
 .darkBorder {
-  border: 3px solid #32374B;
+  border: 3px #32374B;
   border-radius: 6px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.4);
 }
 
-nav.navbar a > * {
+/* typography */
+
+nav.navbar a > h1, nav.navbar span.menu {
+  font-family: 'Roboto', sans-serif;
+}
+
+nav.navbar a span {
   color: #F1F3F2;
+  font-size: 18px;
 }
 
-nav.navbar a > span {
+body {
+  font-family: 'Lora', serif;
+}
+
+.cardSize {
   font-size: 20px;
 }
+
+nav.navbar a > h1 {
+  font-size: 46px;
+}
+
+/* general styles */
 
 button.btn:hover, a.btn:hover {
   background-color: none;
@@ -45,22 +67,6 @@ button.btn:hover, a.btn:hover {
   transform: scale(.99);
 }
 
-.cardSize {
-  font-size: 20px;
-}
-
 #navBar {
   padding: 0 10px;
-}
-
-@media (max-width: 768px) {
-
-  nav.navbar a > h1 {
-    font-size: 50px;
-  }
-
-  nav.navbar a > span {
-    font-size: 20px;
-  }
-
 }
