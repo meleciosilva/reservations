@@ -9,8 +9,8 @@ function ListTables({ tables, handleFreeTableAndFinishReservation }) {
         <h2>Tables</h2>
 
         <div className="row">
-          {sortedTables.map((table, index) => (
-            <div key={index} className="col-6 col-md-3 col-xxl-4">
+          {sortedTables.map((table) => (
+            <div key={table.table_id} className="col-6 col-md-3 col-xxl-4">
               <div className="card lightBackground darkBorder mb-2">
                 <div className="card-body text-center pt-3 pb-2">
                   <p className="darkText py-2 size22px">{table.table_name}</p>

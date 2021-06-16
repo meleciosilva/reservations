@@ -22,8 +22,8 @@ function ListReservations({ reservations, handleCancelReservation }) {
       <h2>Reservations</h2>
 
       <div className="row py-3">
-        {validReservations.map((reservation, index) => (
-          <div className="col-xs-12 col-sm-6 col-md-4" key={index}>
+        {validReservations.map((reservation) => (
+          <div className="col-xs-12 col-sm-6 col-md-4" key={reservation.reservation_id}>
             <div className="card mb-3 darkBorder">
               <div className="card-header d-flex justify-content-between darkBackground lightText pt-3">
                 <p className="size22px">
